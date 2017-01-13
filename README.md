@@ -6,7 +6,7 @@
 
 ## 联系方式
 
-阅读过程中的任何想法、建议等，**挑逗一下我呗！** 你可以通过以下的方式联系我：
+阅读过程中有任何的想法、建议等，**挑逗一下我呗！** 你可以通过以下的方式联系我：
 
 * 来Github点一个[![][Badges: Github Stars]][Links: Github Stars]
 * 在Gitbook里 [给我留言](https://www.gitbook.com/book/teaho2015/Spring-source-code-Learning/discussions)
