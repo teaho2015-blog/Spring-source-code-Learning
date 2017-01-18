@@ -1,8 +1,14 @@
 {
-     "plugins": ["disqus"],
+
+    "plugins": ["disqus"],
     "pluginsConfig": {
+        "theme-default": {
+            "showLevel": true
+        },
         "disqus": {
-            "shortName": "introducetogitbook"
+            "shortName": "spring-source-code-learning.gitbook.teaho.net"
         }
-    }  
+    }
 }
+
+
