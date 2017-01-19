@@ -2,9 +2,6 @@
 
     "plugins": ["disqus"],
     "pluginsConfig": {
-        "theme-default": {
-            "showLevel": true
-        },
         "disqus": {
             "shortName": "spring-source-code-learning-gitbook-teaho-net"
         }
