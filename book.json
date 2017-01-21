@@ -1,9 +1,20 @@
 {
 
-    "plugins": ["disqus"],
+    "plugins": ["disqus", 
+                "mermaid", 
+                "codeblock-filename", 
+                "ga",
+                "-search" ],
     "pluginsConfig": {
         "disqus": {
             "shortName": "spring-source-code-learning-gitbook-teaho-net"
+        }, 
+        "ga": {
+            "token": "UA-XXXX-Y"
+        },
+        "search-pro": {
+            "cutWordLib": "nodejieba",
+            "defineWord": ["gitbook-use"]
         }
     }
 }
