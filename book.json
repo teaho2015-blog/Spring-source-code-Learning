@@ -5,7 +5,7 @@
                 "codeblock-filename", 
                 "ga",
                 "-search",
-                 "search-pro" ],
+                 "search-pro@1.0.7" ],
     "pluginsConfig": {
         "disqus": {
             "shortName": "spring-source-code-learning-gitbook-teaho-net"
