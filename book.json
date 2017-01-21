@@ -1,7 +1,7 @@
 {
 
     "plugins": ["disqus", 
-                "mermaid", 
+                "mermaid"
                ],
     "pluginsConfig": {
         "disqus": {
