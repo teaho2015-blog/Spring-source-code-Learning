@@ -1,11 +1,19 @@
 {
 
-    "plugins": ["disqus", 
-                "mermaid",
-                "codeblock-filename", 
-                "ga"
+    "plugins": [
+                "include-codeblock",
+                "advanced-emoji",
+                "anchors",
+                "disqus",
+                "ga",
+                "plantuml"
                ],
     "pluginsConfig": {
+        "include-codeblock": {
+            "template": "default",
+            "unindent": true,
+            "theme": "monokai"
+        },
         "disqus": {
             "shortName": "spring-source-code-learning-gitbook-teaho-net"
         }, 
