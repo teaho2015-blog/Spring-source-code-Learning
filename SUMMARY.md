@@ -4,7 +4,7 @@
 * [Introduction](README.md)
 
 ## PART Ⅱ Spring核心实现
-* [Spring IoC容器](11-spring-ioc容器.md)
+* [Spring IoC容器](ioc/spring-ioc容器.md)
 * Spring AOP
 
 ## PART Ⅲ Spring组件实现
