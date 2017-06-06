@@ -8,7 +8,7 @@
 * Spring AOP
 
 ## PART Ⅲ Spring组件实现
-* [Spring MVC](mvc/21-spring-mvc.md)
+* [Spring MVC](mvc/spring-mvc.md)
 * [Spring事务管理](22-spring事务.md)
     * [事务](221-事务.md)
     * [Spring事务管理](222.md)
