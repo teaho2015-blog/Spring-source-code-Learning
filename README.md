@@ -1,10 +1,12 @@
 # Spring Learning [![][Badges: Github Issues Open]][Links: Github Issues open] [![][Badges: Github Issues Closed]][Links: Github Issues Closed]
 
 
-本文档主要关注点是Spring各部分的实现原理，目的是自我学习。我希望做到尽量简洁，严谨，简单（which means目前不打算做的很详尽）。
+本文档主要关注点是Spring各部分的实现原理，目的是自我学习。我希望做到尽量简洁，严谨，简单。
 
 主要使用Spring4.2.7进行学习，文章出现的Spring相关代码如没有特殊说明皆出自Spring4.2.7。
 
+-- 20200521
+改为以Spring5.x为准，加入Spring boot和webflux的分析。
 
                                                                 
 ## 联系方式
@@ -19,7 +21,7 @@
 
 ## License
 
-[![CC-by-sa 3.0](/assets/by-sa.png)](https://creativecommons.org/licenses/by-sa/3.0/)
+[![CC-by-sa 3.0](./assets/by-sa.png)](https://creativecommons.org/licenses/by-sa/3.0/)
 
 
 
