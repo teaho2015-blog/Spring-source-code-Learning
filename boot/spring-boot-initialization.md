@@ -5,16 +5,16 @@
 
 
 
+## run()
+
+
+### refreshContext()
 
 
 
 
 
-
-
-
-
-### refresh
+### 容器refresh
 
 ~~~
 // ServletWebServerApplicationContext 
@@ -191,6 +191,15 @@ Initialize event multicaster for this context.
 比如，AnnotationConfigServletWebServerApplicationContext、AnnotationConfigReactiveWebServerApplicationContext会去创建web server（createWebServer()）。
 spring boot的mvc内置支持有tomcat、Undertow、jetty三种server，而reactive web server则内置支持tomcat、jetty、netty三种。
 
+~~~
+
+				// Unlike Jetty, all Tomcat threads are daemon threads. We create a
+				// blocking non-daemon to stop immediate shutdown
+				startDaemonAwaitThread();
+
+~~~
+
+btw，如果是tomcat server的话，spring boot会启动多一个线程防止退出。
 
 #### registerListeners()
 
@@ -261,8 +270,6 @@ spring boot的mvc内置支持有tomcat、Undertow、jetty三种server，而react
 
 ~~~
 最后会在finally执行resetCommonCaches()，执行一些Spring core、beans加载和解析的Bean信息（因为对于singleton bean来说已经不需要了）。
-
-
 
 
 
