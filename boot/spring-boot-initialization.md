@@ -188,7 +188,84 @@ Initialize event multicaster for this context.
 
 模板方法，给不同的Spring应用容器去实例化一些特殊的类。
 
-比如，AnnotationConfigServletWebServerApplicationContext会去创建web server（createWebServer()）。
+比如，AnnotationConfigServletWebServerApplicationContext、AnnotationConfigReactiveWebServerApplicationContext会去创建web server（createWebServer()）。
+spring boot的mvc内置支持有tomcat、Undertow、jetty三种server，而reactive web server则内置支持tomcat、jetty、netty三种。
+
+
+#### registerListeners()
+
+把BeanFactory的ApplicationListener拿出来塞到事件广播器里。
+
+如果ApplicationContext的earlyApplicationEvents属性有值，则广播该属性持有的early事件。
+
+
+#### finishBeanFactoryInitialization(beanFactory)
+
+实例化BeanFactory中已经被注册但是未实例化的所有实例(懒加载的不需要实例化)。
+
+比如invokeBeanFactoryPostProcessors方法中根据各种注解解析出来的类，在这个时候都会被初始化。
+
+#### finishRefresh()
+
+~~~
+// ReactiveWebServerApplicationContext
+	@Override
+	protected void finishRefresh() {
+		super.finishRefresh();
+		WebServer webServer = startReactiveWebServer();
+		if (webServer != null) {
+			publishEvent(new ReactiveWebServerInitializedEvent(webServer, this));
+		}
+	}
+
+// AbstractApplicationContext
+	/**
+	 * Finish the refresh of this context, invoking the LifecycleProcessor's
+	 * onRefresh() method and publishing the
+	 * {@link org.springframework.context.event.ContextRefreshedEvent}.
+	 */
+	protected void finishRefresh() {
+		// Clear context-level resource caches (such as ASM metadata from scanning).
+        // 容器完成刷新，清除资源缓存
+		clearResourceCaches();
+
+		// Initialize lifecycle processor for this context.
+        // 初始化lifeCycleProcessor, 默认实现是DefaultLifeCycleProcessor，实现了BeanFactoryAware接口，通过BeanFactory找出LifeCycle bean
+        // 可通过自定义实现LifeCycle接口的Bean，来监听容器的生命周期。
+		initLifecycleProcessor();
+
+		// Propagate refresh to lifecycle processor first.
+        //粗发生命周期处理器的onRefresh方法，顺带一说，在程序正常退出时，会粗发shutdownHook，那时会粗发生命周期处理器的onClose方法
+		getLifecycleProcessor().onRefresh();
+
+		// Publish the final event.
+        // 广播ContextRefreshed事件
+		publishEvent(new ContextRefreshedEvent(this));
+
+		// Participate in LiveBeansView MBean, if active.
+        // 将ApplicationContext注册到Spring tool suite里
+		LiveBeansView.registerApplicationContext(this);
+	}
+~~~
+
+
+
+#### resetCommonCaches()
+
+
+~~~
+
+                // Reset common introspection caches in Spring's core, since we
+				// might not ever need metadata for singleton beans anymore...
+				resetCommonCaches();
+
+~~~
+最后会在finally执行resetCommonCaches()，执行一些Spring core、beans加载和解析的Bean信息（因为对于singleton bean来说已经不需要了）。
+
+
+
+
+
 
 
 
