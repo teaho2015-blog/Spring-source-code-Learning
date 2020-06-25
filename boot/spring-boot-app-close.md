@@ -1,13 +1,24 @@
 # Spring Boot应用关闭分析
 
+## 前言
+
+该篇介绍优雅关闭SpringBoot 应用的方式，及一些分析。
 
 ## 应用关闭方式
 
-1. 使用spring容器的close方法关闭。
-2. 使用SpringApplication的exit方法。
-3. 使用Actuator的shutdown接口。
+### 使用spring容器的close方法关闭。
 
-请参考https://github.com/teaho2015-blog/spring-source-code-learning-demo的spring boot mvc shutdown模块，我分别将。
+
+### 使用SpringApplication的exit方法。
+
+
+### 使用Actuator的shutdown http接口或JMX
+
+可参考Actuator包的ShutdownEndpoint,实质上是调用spring容器的close方法关闭的
+
+
+### kill进程
+
 
 
 ## spring容器close代码分析
@@ -97,8 +108,6 @@
 
 ## 应用关闭扩展点
 
-@PreDestroy
-
 ExitCodeGenerator
 
 SpringApplication#exit()
@@ -113,6 +122,9 @@ Actuator  shutdown接口
 MBean
 
 
+##
+
+请参考https://github.com/teaho2015-blog/spring-source-code-learning-demo的spring boot mvc shutdown模块，我分别将上述关闭方式deni了demo。
 
 
 
