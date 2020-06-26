@@ -12,6 +12,8 @@
    
 外部化配置，配置的加载及优先级，配置更新
 
+注解加载，自定义注解
+
 Spring SPI对比Dubbo SPI、JDK SPI
 
 Spring Cloud common、context所额外做的
@@ -21,6 +23,7 @@ Spring Cloud common、context所额外做的
     CircuitBreaker
 
 Spring boot Actuator
+
 Spring boot loader（Jar launcher）
 
 
