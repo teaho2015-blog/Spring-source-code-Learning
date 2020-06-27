@@ -77,7 +77,8 @@ public class ApplicationMainShutDownBySpringApplication {
 ~~~
 
 ~~~ 执行window bat
->java -jar spring-boot-mvc-shutdown-demo.jar & echo %ERRORLEVEL%
+执行window bat:
+java -jar spring-boot-mvc-shutdown-demo.jar & echo %ERRORLEVEL%
 
 省略其他日志最终输出:
 10
