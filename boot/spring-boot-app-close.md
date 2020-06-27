@@ -217,13 +217,13 @@ JMX方式关闭：
 
 容器关闭时的日志如下，
 ~~~ 日志输出
-2020-06-27 01:23:36.294  INFO 241764 --- [           main] .w.s.s.ApplicationMainShutDownByActuator : Actuator shutdown result: {"message":"Shutting down, bye..."}
-2020-06-27 01:23:36.761  INFO 241764 --- [      Thread-25] s.s.ApplicationContextCloseEventListener : event: org.springframework.context.event.ContextClosedEvent[source=org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@2f48b3d2, started on Sat Jun 27 01:22:57 CST 2020], source: org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@2f48b3d2, started on Sat Jun 27 01:22:57 CST 2020
-2020-06-27 01:23:39.914  INFO 241764 --- [      Thread-25] n.t.d.s.w.s.s.spring.LoggingLifeCycle    : In Life cycle bean stop().
-2020-06-27 01:23:39.915  INFO 241764 --- [      Thread-25] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-06-27 01:23:39.916  INFO 241764 --- [      Thread-25] n.t.d.s.w.s.shutdown.bean.SimpleBean     : @PreDestroy!
-2020-06-27 01:23:39.916  INFO 241764 --- [      Thread-25] n.t.d.s.w.s.shutdown.bean.SimpleBean     : DisposableBean is destroying!
-2020-06-27 01:23:39.916  INFO 241764 --- [      Thread-25] n.t.d.s.w.s.shutdown.bean.SimpleBean     : On my way to destroy!
+  INFO 241764 --- [           main] .w.s.s.ApplicationMainShutDownByActuator : Actuator shutdown result: {"message":"Shutting down, bye..."}
+  INFO 241764 --- [      Thread-25] s.s.ApplicationContextCloseEventListener : event: org.springframework.context.event.ContextClosedEvent[source=org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@2f48b3d2, started on Sat Jun 27 01:22:57 CST 2020], source: org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@2f48b3d2, started on Sat Jun 27 01:22:57 CST 2020
+  INFO 241764 --- [      Thread-25] n.t.d.s.w.s.s.spring.LoggingLifeCycle    : In Life cycle bean stop().
+  INFO 241764 --- [      Thread-25] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+  INFO 241764 --- [      Thread-25] n.t.d.s.w.s.shutdown.bean.SimpleBean     : @PreDestroy!
+  INFO 241764 --- [      Thread-25] n.t.d.s.w.s.shutdown.bean.SimpleBean     : DisposableBean is destroying!
+  INFO 241764 --- [      Thread-25] n.t.d.s.w.s.shutdown.bean.SimpleBean     : On my way to destroy!
 ~~~
 
 可看到的是一般可供使用的容器关闭时的拓展点不多，分别有这两个：
