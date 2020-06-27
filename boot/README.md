@@ -16,6 +16,8 @@
 
 Spring SPI对比Dubbo SPI、JDK SPI
 
+Spring boot loader（Jar launcher）
+
 Spring Cloud common、context所额外做的
     load balance
     discoveryClient
@@ -23,9 +25,6 @@ Spring Cloud common、context所额外做的
     CircuitBreaker
 
 Spring boot Actuator
-
-Spring boot loader（Jar launcher）
-
 
 
 

@@ -11,3 +11,14 @@
 [5][Spring Boot Reference Guide](https://docs.spring.io/spring-boot/docs/2.1.14.RELEASE/reference/htmlsingle)
 
 [6]https://cloud.tencent.com/developer/article/1497799
+
+[7][当执行kill -9 PID时系统发生了什么](http://zyearn.github.io/blog/2015/03/22/what-happens-when-you-kill-a-process/)
+
+[8][魅族内核团队|Linux Signal](http://kernel.meizu.com/linux-signal.html)
+
+[9][Rout Susant K.|Learning and Building Business and System Applications](https://books.google.com/books?id=t0JsyboZjP0C&pg=PA236&lpg=PA236&dq=sigaddset(%26t-%3Epending.signal,+SIGKILL)&source=bl&ots=WdECa1xSGp&sig=ACfU3U2lxZGJHDp4gBoZBrdI-tke51T35g&hl=zh-CN&sa=X&ved=2ahUKEwj6jIjPzaLqAhXCaN4KHRBZCfkQ6AEwAHoECAoQAQ#v=onepage&q&f=false)
+
+[10][openjdk8|jsig.c](http://hg.openjdk.java.net/jdk8u/jdk8u/hotspot/file/tip/src/os/bsd/vm/jsig.c)
+
+[11][Signals Used in Oracle Solaris and Linux | Java Platform, Standard Edition Troubleshooting Guide](https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/signals006.html#sthref55)
+
