@@ -1,7 +1,11 @@
 # Summary
 
-## PART I 文档介绍与Spring整体解析
-* [Introduction](README.md)
+## PART I Spring boot
+
+* [Spring boot启动原理及核心组件](boot/spring-boot-initialization.md)
+* [Spring Boot应用关闭分析](boot/spring-boot-app-close.md)
+* [Spring spring.factories文件]()
+* [Spring boot]()
 
 ## PART Ⅱ Spring核心实现
 * [Spring IoC容器](ioc/spring-ioc容器.md)
@@ -19,11 +23,6 @@
 * Spring E-mail支持
 * Spring 任务调度
 * Spring 对JMS的集成
-
-## PART Ⅴ Spring boot
-* [Spring boot启动原理及核心组件](boot/spring-boot-initialization.md)
-* [Spring spring.factories文件]()
-* [Spring boot]()
 
 
 ## 附录
