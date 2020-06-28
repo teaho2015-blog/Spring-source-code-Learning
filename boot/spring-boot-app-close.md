@@ -76,7 +76,7 @@ public class ApplicationMainShutDownBySpringApplication {
 }
 ~~~
 
-~~~ 执行window bat
+~~~ 
 执行window bat:
 java -jar spring-boot-mvc-shutdown-demo.jar & echo %ERRORLEVEL%
 
@@ -209,14 +209,14 @@ JMX方式关闭：
 
 ## 示例
 
-请参考https://github.com/teaho2015-blog/spring-source-code-learning-demo的spring boot mvc shutdown模块，
+请参考https://github.com/teaho2015-blog/spring-source-code-learning-demo 的spring boot mvc shutdown模块，
 我分别将上述关闭方式和拓展点（事件，LifeCycleProcessor等）写了demo。
 
 
 
 ## 容器关闭拓展点
 
-容器关闭时的日志如下，
+上面的示例，容器关闭时的日志如下，
 ~~~ 日志输出
   INFO 241764 --- [           main] .w.s.s.ApplicationMainShutDownByActuator : Actuator shutdown result: {"message":"Shutting down, bye..."}
   INFO 241764 --- [      Thread-25] s.s.ApplicationContextCloseEventListener : event: org.springframework.context.event.ContextClosedEvent[source=org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@2f48b3d2, started on Sat Jun 27 01:22:57 CST 2020], source: org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@2f48b3d2, started on Sat Jun 27 01:22:57 CST 2020
@@ -236,7 +236,7 @@ JMX方式关闭：
 
 ## 拓展：kill与kill -9的区别
 
-为什么说这个呢，其实，我们可以发现，kill的时候，Spring Boot程序可以执行应用退出相关的代码，而kill -9则不能。任意使用kill -9，有时会造成一些问题，
+为什么说这个呢，作为开发一般我们知道kill的时候，Spring Boot程序可以执行应用退出相关的代码，而kill -9则不能。任意使用kill -9，有时会造成一些问题，
 比如，一些执行中的数据不能就是保存等等。
 
 上面已经说到了，kill可以触发java程序的shutdownhook，从而触发spring容器的优雅关闭。
@@ -248,7 +248,7 @@ JMX方式关闭：
 
 kill命令不带参数，默认是-15（SIGTERM），而kill -9是SIGKILL。
 
-了解操作系统的话，会知道进程间能通过信号通信，SIGTERM、SIGKILL信号的含义是[维基百科|Signal](https://en.m.wikipedia.org/wiki/Signal_(IPC)#SIGKILL):
+了解操作系统的话，会知道进程间能通过信号通信，SIGTERM、SIGKILL信号的含义是[维基百科|Signal][1]
 >SIGTERM
 > The SIGTERM signal is sent to a process to request its termination. Unlike the SIGKILL signal, it can be caught and interpreted or ignored by the process. This allows the process to perform nice termination releasing resources and saving state if appropriate. SIGINT is nearly identical to SIGTERM.
 >SIGKILL
@@ -619,7 +619,7 @@ void signal_wake_up_state(struct task_struct *t, unsigned int state)
 ~~~
 在如上信号处理代码中可知，
 如果是强制信号（比如SIGKILL（kill -9）），不走挂载pending队列的流程，直接快速路径优先处理。
-然后，在内核层面就给处理掉，不过发送到进程。
+然后，在内核层面就给处理掉，不会发送到进程。
 
 ### JDK处理信号的相关代码分析
 
@@ -692,3 +692,11 @@ btw，我们可以看到Shutdown有两个方法，一个是Shutdown#exit(int sta
 * 一是JAVA程序收到SIGINT、SIGTERM信号量。
 * 或者当非Daemon线程都已经执行完了。
 
+
+## 总结
+
+本文挖掘了Spring Boot的关闭方式，并列举了关闭方式，从原理、源码的角度阐述了Spring Boot的关闭代码及扩展点。同时，额外说明了一些系统特性
+和原理，比如，程序退出码和信号机制。
+
+
+[1]: https://en.m.wikipedia.org/wiki/Signal_(IPC)
