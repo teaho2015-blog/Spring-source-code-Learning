@@ -260,7 +260,7 @@ kill命令不带参数，默认是-15（SIGTERM），而kill -9是SIGKILL。
 > SIGKILL is used as a last resort when terminating processes in most system shutdown procedures if it does not voluntarily exit in response to SIGTERM. To speed the computer shutdown procedure, Mac OS X 10.6, aka Snow Leopard, will send SIGKILL to applications that have marked themselves "clean" resulting in faster shutdown times with, presumably, no ill effects.[13] The command killall -9 has a similar, while dangerous effect, when executed e.g. in Linux; it doesn't let programs save unsaved data. It has other options, and with none, uses the safer SIGTERM signal.
 
 想了解信号的生命周期，如何写写信号处理器等等，详细描述可以看这本书：
-[Rout Susant K.|Learning and Building Business and System Applications](https://books.google.com/books?id=t0JsyboZjP0C&pg=PA236&lpg=PA236&dq=sigaddset(%26t-%3Epending.signal,+SIGKILL)&source=bl&ots=WdECa1xSGp&sig=ACfU3U2lxZGJHDp4gBoZBrdI-tke51T35g&hl=zh-CN&sa=X&ved=2ahUKEwj6jIjPzaLqAhXCaN4KHRBZCfkQ6AEwAHoECAoQAQ#v=onepage&q&f=false)
+[Rout Susant K.|Learning and Building Business and System Applications][2]
 
 ### 那么一个进程（包括Java进程）是怎么处理信号的呢？
 
@@ -700,3 +700,4 @@ btw，我们可以看到Shutdown有两个方法，一个是Shutdown#exit(int sta
 
 
 [1]: https://en.m.wikipedia.org/wiki/Signal_(IPC)
+[2]: https://books.google.com/books?id=t0JsyboZjP0C&pg=PA236&lpg=PA236&dq=sigaddset(%26t-%3Epending.signal,+SIGKILL)&source=bl&ots=WdECa1xSGp&sig=ACfU3U2lxZGJHDp4gBoZBrdI-tke51T35g&hl=zh-CN&sa=X&ved=2ahUKEwj6jIjPzaLqAhXCaN4KHRBZCfkQ6AEwAHoECAoQAQ#v=onepage&q&f=false
