@@ -2,7 +2,7 @@
 
 ## 前言
 
-该篇介绍优雅关闭SpringBoot 应用的方式，及一些分析。
+该篇介绍优雅关闭SpringBoot应用的方式，及一些分析。
 
 ## 应用关闭方式
 
@@ -272,7 +272,10 @@ kill命令不带参数，默认是-15（SIGTERM），而kill -9是SIGKILL。
 信号是异步的，信号的接收不是由用户进程来完成的，而是由内核代理。
 当一个进程P2向另一个进程P1发送信号后，内核接受到信号，并将其放在P1的信号队列当中。当P1再次陷入内核态时，会检查信号队列，并根据相应的信号调取相应的信号处理函数。
 
-特别说下，一个点：
+特别说下，一个点：  
+在如下信号处理代码中可知，  
+如果是强制信号（比如SIGKILL（kill -9）），不走挂载pending队列的流程，直接快速路径优先处理。
+然后，在内核层面就给处理掉，不会发送到进程。
 ~~~ kernel/signal.c
 static int __send_signal(int sig, struct siginfo *info, struct task_struct *t,
 			int group, int from_ancestor_ns)
@@ -617,9 +620,6 @@ void signal_wake_up_state(struct task_struct *t, unsigned int state)
 }
 
 ~~~
-在如上信号处理代码中可知，
-如果是强制信号（比如SIGKILL（kill -9）），不走挂载pending队列的流程，直接快速路径优先处理。
-然后，在内核层面就给处理掉，不会发送到进程。
 
 ### JDK处理信号的相关代码分析
 
