@@ -42,12 +42,29 @@ ApplicationListener：
 
 ## 组织关系及调用关系
 
-![event-mechanism.md](event-mechanism.md)
+![event-mechanism.md](event%20mechanism.png)
 
 图中我对组件和相互关系做了解析，我再说一点：  
 `SimpleApplicationEventMulticaster`分别会被
 Spring boot应用启动时的EventPublishingRunListener和应用运行时的ApplicationContext实例化和调用。
 
+
+## Spring Boot应用启动时的事件
+
+* starting（ApplicationStartingEvent） 
+   在SpringApplication启动时就调用
+* environmentPrepared（ApplicationEnvironmentPreparedEvent）
+  在environment准备好时调用
+* contextPrepared（ApplicationContextInitializedEvent）
+  context初始化后调用
+* contextLoaded（ApplicationPreparedEvent）
+  加载了bean资源后发出该事件。
+* started（ApplicationStartedEvent）
+  刷新了context后发出的事件。
+* running（ApplicationReadyEvent）
+  调用完ApplicationRunner和CommandLineRunner后发出的事件。
+* failed（ApplicationFailedEvent）
+  在启动时发生异常会发出该事件。
 
 ## 例子
 

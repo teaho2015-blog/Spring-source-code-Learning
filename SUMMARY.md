@@ -4,8 +4,8 @@
 
 * [Spring boot启动原理及核心组件](boot/spring-boot-initialization.md)
 * [Spring Boot应用关闭分析](boot/spring-boot-app-close.md)
-* [Spring spring.factories文件]()
-* [Spring boot]()
+* [Spring Application事件机制](boot/event-mechanism.md)
+* [Spring Boot spring.factories文件组件解析](boot/spring-boot-spring-factories.md)
 
 ## PART Ⅱ Spring核心实现
 * [Spring IoC容器](ioc/spring-ioc容器.md)
