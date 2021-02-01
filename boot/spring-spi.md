@@ -186,9 +186,11 @@ Dubbo SPI的一些概念：
 ### 代码分析
 
 Dubbo的文档比较完善，而且还设计到框架设计和源码解读（文章对代码进行了大量注释），  
-关于ExtensionLoader的请查看这两篇文章：
+请查看这两篇文章：
 [Dubbo doc|Dubbo SPI][Links: Dubbo doc|Dubbo SPI]  
 [Dubbo doc|SPI 自适应拓展][Links: Dubbo doc|SPI 自适应拓展]  
+
+对源码进行了行级注释，如果疑问可通过上一节的例子（test case）进行调试。
 
 ## 对比
 
