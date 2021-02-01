@@ -17,7 +17,7 @@
 * 在Gitbook里 [给我留言](https://spring-source-code-learning.gitbook.teaho.net)
 * 给这个项目提 [issue][Badges: Github Issues Open]
 * 给这个项目提 [pull request](https://github.com/teaho2015/Spring-source-code-Learning/pulls)
-* **邮箱**：teaho2015<at>gmail.com(replace <at> with @)
+* **邮箱**：teaho2015\<at>gmail.com(replace \<at> with @)
 
 ## License
 
