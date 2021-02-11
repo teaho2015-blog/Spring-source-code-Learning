@@ -2,8 +2,8 @@
 
 ## PART I Spring boot
 
-* [Spring boot启动原理及核心组件](boot/spring-boot-initialization.md)
 * [Spring Boot应用关闭分析](boot/spring-boot-app-close.md)
+* [Spring boot启动原理及核心组件](boot/spring-boot-initialization.md)
 * [Spring Application事件机制](boot/event-mechanism.md)
 * [Spring Boot spring.factories文件组件解析](boot/spring-boot-spring-factories.md)
 * [Spring SPI与Java SPI、Dubbo SPI](boot/spring-spi.md)

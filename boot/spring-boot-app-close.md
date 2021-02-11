@@ -239,7 +239,7 @@ JMX方式关闭：
 为什么说这个呢，作为开发一般我们知道kill的时候，Spring Boot程序可以执行应用退出相关的代码，而kill -9则不能。任意使用kill -9，有时会造成一些问题，
 比如，一些执行中的数据不能及时保存等等。
 
-上面已经说到了，kill可以触发java程序的shutdownhook，从而触发spring容器的优雅关闭。
+上面已经说到了，kill可以触发java程序的shutdownhook，从而触发spring容器的优雅关闭。  
 这里，我不仅想讨论shutdownhook怎么注册，怎样触发，我把问题放大了一点：kill和kill -9在操作系统和JVM层面来看分别有什么不同，各自做了什么？
 
 
@@ -249,9 +249,9 @@ JMX方式关闭：
 kill命令不带参数，默认是-15（SIGTERM），而kill -9是SIGKILL。
 
 了解操作系统的话，会知道进程间能通过信号通信，SIGTERM、SIGKILL信号的含义是[维基百科|Signal][1]
->SIGTERM
-> The SIGTERM signal is sent to a process to request its termination. Unlike the SIGKILL signal, it can be caught and interpreted or ignored by the process. This allows the process to perform nice termination releasing resources and saving state if appropriate. SIGINT is nearly identical to SIGTERM.
->SIGKILL
+>SIGTERM  
+> The SIGTERM signal is sent to a process to request its termination. Unlike the SIGKILL signal, it can be caught and interpreted or ignored by the process. This allows the process to perform nice termination releasing resources and saving state if appropriate. SIGINT is nearly identical to SIGTERM.  
+>SIGKILL  
 > The SIGKILL signal is sent to a process to cause it to terminate immediately (kill). In contrast to SIGTERM and SIGINT, this signal cannot be caught or ignored, and the receiving process cannot perform any clean-up upon receiving this signal. The following exceptions apply:
 > Zombie processes cannot be killed since they are already dead and waiting for their parent processes to reap them.
 > Processes that are in the blocked state will not die until they wake up again.
