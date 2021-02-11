@@ -169,14 +169,16 @@ Dubbo SPI的一些概念：
 拓展（extension）则相当于服务提供者（service provider）。
 
 拓展定义约定：
-> 在扩展类的 jar 包内 1，放置扩展点配置文件 META-INF/dubbo/接口全限定名，内容为：配置名=扩展实现类全限定名，多个实现类用换行符分隔。
+> 在扩展类的 jar 包内，放置扩展点配置文件 META-INF/dubbo/接口全限定名，内容为：配置名=扩展实现类全限定名，多个实现类用换行符分隔。
 
-简单来说，一般有三种获取拓展的方式。
+简单来说，有三种获取拓展的方式。
 1. ExtensionLoader的getExtension(name)通过名字找到配置名的拓展。
 2. 通过getActivateExtension()，也就是扩展点自动激活，可同时加载多个拓展实现。可以通过一些筛选条件获取一个拓展集合。
-   比如，通过一些条件获取Filter集合。
-3. 拓展点自适应（adaptive extension），能够（通过java assist生成的代理对象）直到扩展点方法执行时才决定调用是哪一个扩展点实现。
-   包括拓展点的注入拓展。
+   比如，通过一些条件获取一个Filter集合。
+3. 拓展点自适应（adaptive extension），能够（通过java assist生成的代理对象）直到扩展点方法执行时才决定调用哪一个扩展点实现。
+   包括拓展点的注入拓展也如此。 
+   
+Dubbo SPI这一小节文章以后会搬到这里：[https://dubbo-learning.gitbook.teaho.net/](https://dubbo-learning.gitbook.teaho.net/)
    
 ### 例子
 
@@ -185,12 +187,12 @@ Dubbo SPI的一些概念：
 
 ### 代码分析
 
-Dubbo的文档比较完善，而且还设计到框架设计和源码解读（文章对代码进行了大量注释），  
-请查看这两篇文章：
+Dubbo的文档比较完善，而且还涉及到框架设计和源码解读（文章对源代码进行了大量注释），  
+请查看这两篇文章：  
 [Dubbo doc|Dubbo SPI][Links: Dubbo doc|Dubbo SPI]  
 [Dubbo doc|SPI 自适应拓展][Links: Dubbo doc|SPI 自适应拓展]  
 
-对源码进行了行级注释，如果疑问可通过上一节的例子（test case）进行调试。
+对源码进行了行级注释，如有疑问可通过上一节的例子（test case）进行调试。
 
 ## 对比
 
@@ -206,7 +208,6 @@ Dubbo SPI的优点正如文档所说：
 >  * 增加了对扩展点 IoC 和 AOP 的支持，一个扩展点可以直接 setter 注入其它扩展点。
 
 补充一点，Dubbo SPI还有@Activate注解，可以通过一些过滤条件获取一个拓展集合。
-
 
 ## Reference
 

@@ -45,7 +45,7 @@ this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
 //通过Classloader探测不同web应用核心类是否存在，进而设置web应用类型
 this.webApplicationType = WebApplicationType.deduceFromClasspath(); 
 //找出所有spring.factories中声明的ApplicationContextInitializer并设置，
-//ApplicationContextInitializer定义了回调接口，在refresh()前初始化调用
+//ApplicationContextInitializer定义了回调接口，在refresh()前初始化调用（即在prepareContext的applyInitializers方法中调用）
 setInitializers((Collection) getSpringFactoriesInstances(
 ApplicationContextInitializer.class));
 //找出所有spring.factories中声明的ApplicationListener（细节往后再叙），ApplicationListener继承了
@@ -136,7 +136,7 @@ private ConfigurableEnvironment prepareEnvironment(
    }
    //附加的解析器将动态跟踪底层 Environment 属性源的任何添加或删除，
    //关于ConfigurationPropertySourcesPropertySource和MutablePropertiySource
-   //将在Environment周期中作进一步讲解
+   //将在Environment中作进一步讲解
    ConfigurationPropertySources.attach(environment);
    return environment;
 }

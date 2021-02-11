@@ -8,7 +8,7 @@
 
 ### 使用spring容器的close方法关闭。
 
-可通过在代码中获取SpringContext并调用close方法，去关闭容器。
+可通过在代码中获取SpringContext并调用close方法去关闭容器。
 
 ### 使用SpringApplication的exit方法。
 
@@ -227,17 +227,17 @@ JMX方式关闭：
   INFO 241764 --- [      Thread-25] n.t.d.s.w.s.shutdown.bean.SimpleBean     : On my way to destroy!
 ~~~
 
-可看到的是一般可供使用的容器关闭时的拓展点不多，分别有这两个：
+可看到一般可供使用的容器关闭时拓展点不多，分别有这两个：
 * 监听ContextClosedEvent事件，对应例子是demo中的ApplicationContextCloseEventListener类。
 * LifeCycle/SmartLifeCycle的stop()方法，对应例子是demo中的LoggingLifeCycle类。
 
 他们的触发时机在上面的close代码的分析中有注释。
 
 
-## 拓展：kill与kill -9的区别
+## 拓展探究：kill与kill -9的区别
 
 为什么说这个呢，作为开发一般我们知道kill的时候，Spring Boot程序可以执行应用退出相关的代码，而kill -9则不能。任意使用kill -9，有时会造成一些问题，
-比如，一些执行中的数据不能就是保存等等。
+比如，一些执行中的数据不能及时保存等等。
 
 上面已经说到了，kill可以触发java程序的shutdownhook，从而触发spring容器的优雅关闭。
 这里，我不仅想讨论shutdownhook怎么注册，怎样触发，我把问题放大了一点：kill和kill -9在操作系统和JVM层面来看分别有什么不同，各自做了什么？

@@ -3,6 +3,7 @@
 ## 前言
 
 在Spring Boot应用构建期间会发出诸如ApplicationStartingEvent、ApplicationEnvironmentPreparedEvent等事件，
+在Spring Context中也是有事件的，
 在Spring Cloud的配置刷新等地方，也用到了事件。       
 事件机制就像是观察者模式，将变化通过事件广播出去，触发应用内各部件的联动。
 通过自定义事件监听器或者自定义事件，我们能够在松耦合的结构下对应用变化做感知，达到我们期望的一致性。
@@ -46,7 +47,7 @@ ApplicationListener：
 
 图中我对组件和相互关系做了解析，我再说一点：  
 `SimpleApplicationEventMulticaster`分别会被
-Spring boot应用启动时的EventPublishingRunListener和应用运行时的ApplicationContext实例化和调用。
+Spring boot应用启动时的`EventPublishingRunListener`和应用运行时的`ApplicationContext`实例化和调用。
 
 
 ## Spring Boot应用启动时的事件
