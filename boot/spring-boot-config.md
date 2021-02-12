@@ -21,7 +21,7 @@
 * 配置如何从配置文件加载到运行环境
 * 配置如何最终绑定到bean
 * 配置加载顺序（优先级）的加载点
-* ~~配置动态刷新~~(目前Spring Boot没有该特性（有需求可参考Spring Cloud自行实现），Spring Cloud Context的源码实现了该功能，在Spring Cloud源码分析中进行拆解)
+* ~~配置动态刷新~~(目前Spring Boot没有该特性（有需求可参考Spring Cloud自行实现），Spring Cloud Context的源码实现了该功能，我在Spring Cloud源码分析中进行拆解)
 
 ## Spring Boot配置加载顺序
 
