@@ -578,7 +578,7 @@ class ConfigurationPropertiesBinder {
 * `Bindable<T>`是对待绑定配置属性实例的一些封装实现，里面提取了配置属性类的类型、注解作为类属性。
 * `BindHandler`绑定回调处理器，有`onStart`、`onSuccess`、`onFailure`、`onFinish`方法，在Binder的绑定执行过程中作一些回调函数处理。
 * `BindResult`对绑定结果作容器包装，和`Optional`的功能类似。
-* `BindContext`
+* `BindContext`用于绑定过程中记录递归配置深度和记录待绑定bean队列
 * `BeanBinder` Internal strategy used by Binder to bind beans.
 * `BeanPropertyBinder` 一个绑定器接口，被BeanBinder的实现类用于递归绑定bean属性。
 
