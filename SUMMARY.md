@@ -7,6 +7,7 @@
 * [Spring Application事件机制](boot/event-mechanism.md)
 * [Spring Boot spring.factories文件组件解析](boot/spring-boot-spring-factories.md)
 * [Spring SPI与Java SPI、Dubbo SPI](boot/spring-spi.md)
+* [SpringBoot外部化配置分析](boot/spring-boot-config.md)
 
 ## PART Ⅱ Spring核心实现
 * [Spring IoC容器](ioc/spring-ioc容器.md)
