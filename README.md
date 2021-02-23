@@ -6,9 +6,9 @@
 主要使用Spring4.2.7进行学习，文章出现的Spring相关代码如没有特殊说明皆出自Spring4.2.7。
 
 -- 202005
-改为以Spring5.x为准，加入Spring boot和webflux的分析。
+改为以Spring5.x为准，加入Spring boot 2.1和webflux的分析。
 
-                                                                
+                              
 ## 联系方式
 
 由于本人时间、能力有限，本文很可能有所纰漏，阅读过程中有任何的想法、建议等，**挑逗一下我呗！** 你可以通过以下的方式联系我：
@@ -16,7 +16,6 @@
 * 来Github点一个[![][Badges: Github Stars]][Links: Github Stars]
 * 在Gitbook里 [给我留言](https://spring-source-code-learning.gitbook.teaho.net)
 * 给这个项目提 [issue][Badges: Github Issues Open]
-* 给这个项目提 [pull request](https://github.com/teaho2015/Spring-source-code-Learning/pulls)
 * **邮箱**：teaho2015\<at>gmail.com(replace \<at> with @)
 
 ## License

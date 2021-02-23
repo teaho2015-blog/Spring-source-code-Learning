@@ -56,7 +56,8 @@ Spring Boot文档的外部化配置一节说到了配置加载点的优先级。
 5是指spring.application.json这个参数。可用过系统参数设置或environment设置。  
 9是指系统参数，比如java -jar -Dspring.config.name="xxx" xxx.jar  
 12-15，带-{profile}的优先，同名配置文件jar包外优先。  
-16是指声明了@Configuration和@PropertySource的类，举例来说 @PropertySource("classpath:/com/myco/app.properties")。该加载步骤发生在refresh时，所以对于logging.*和spring.main.*等在refresh前已经使用的配置来说是无效的。 
+16是指声明了@Configuration和@PropertySource的类，举例来说 @PropertySource("classpath:/com/myco/app.properties")。
+在ConfigurationClassParser中加载，该加载步骤发生在refresh时，所以对于logging.*和spring.main.*等在refresh前已经使用的配置来说是无效的。 
 17 SpringApplication.setDefaultProperties设置的默认配置。
 
 
@@ -681,27 +682,6 @@ bindBean方法，注意绑定属性采用递归调用
 至此，分析完Binder的实现了。
 
 
-<!--
-在prepareEnvironment的applyInitializers  
-SharedMetadataReaderFactoryContextInitializer注册的  
-Configuration_Annotation_Processor  
-`AnnotationConfigUtils.CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME`
-
-在SpringApplication的prepareEnvironment的`load(context, sources.toArray(new Object[0]));`  
-=> BeanDefinitionLoader的load  
-=> ClassPathBeanDefinitionScanner scanner  
-=> AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry)  
-=> register ConfigurationClassPostProcessor
-
-在refresh Application context时，invokeBeanFactoryPostProcessors
-=> PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors())
-=> ConfigurationClassPostProcessor.processConfigBeanDefinitions（同时看看ConfigurationClassParser）
-=> ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsForConfigurationClass、loadBeanDefinitionsFromRegistrars
-=> ConfigurationPropertiesAutoConfiguration引入的EnableConfigurationPropertiesImportSelector
-   引入的ConfigurationPropertiesBeanRegistrar（负责注册EnableConfigurationProperties注解value上的类）、ConfigurationPropertiesBindingPostProcessorRegistrar（负责注册ConfigurationPropertiesBindingPostProcessor去处理绑定propertySource(外部配置)到bean上）
--->
-
-
 
 ### 小结
 
@@ -720,6 +700,10 @@ Configuration_Annotation_Processor
 我在github上写了一个基本的外部化配置的demo：
 [github|spring-boot-externalized-configuration-demo](https://github.com/teaho2015-blog/spring-source-code-learning-demo/tree/master/spring-boot-externalized-configuration-demo)
 
+
+## 后记
+
+Spring Boot 2.4后，加载配置文件有一个大变动，不再使用ConfigFileApplicationListener加载配置，并作出了一堆特性优化。
 
 ## Reference
 

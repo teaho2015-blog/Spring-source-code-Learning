@@ -8,6 +8,7 @@
 * [Spring Boot spring.factories文件组件解析](boot/spring-boot-spring-factories.md)
 * [Spring SPI与Java SPI、Dubbo SPI](boot/spring-spi.md)
 * [SpringBoot外部化配置分析](boot/spring-boot-config.md)
+* [Spring Boot自动装配](boot/spring-boot-auto-configuration.md)
 
 ## PART Ⅱ Spring核心实现
 * [Spring IoC容器](ioc/spring-ioc容器.md)

@@ -127,7 +127,7 @@ private ConfigurableEnvironment prepareEnvironment(
    configureEnvironment(environment, applicationArguments.getSourceArgs());
    //发布environment prepared事件
    listeners.environmentPrepared(environment);
-   //将获取到的environment中的spring.main配置绑定到SpringApplication的source中,
+   //将获取到的environment中的spring.main配置绑定到SpringApplication中,
    //使用的是Binder这个spring boot2.0开始有的类
    bindToSpringApplication(environment);
    if (!this.isCustomEnvironment) {

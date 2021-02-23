@@ -2,7 +2,7 @@
 
 [1]Rod Johnson, Juergen Hoeller, Alef Arendsen等.Spring Reference[EB/OL]. [link](http://docs.spring.io/spring/docs/4.2.7.RELEASE/spring-framework-reference/htmlsingle/)
 
-[2]spring相关源码
+[2]Spring相关源码
 
 [3]王福强.Spring揭秘[M].中国:人民邮电出版社,2009
 
@@ -16,9 +16,15 @@
 
 [8][魅族内核团队|Linux Signal](http://kernel.meizu.com/linux-signal.html)
 
-[9][Rout Susant K.|Learning and Building Business and System Applications](https://books.google.com/books?id=t0JsyboZjP0C&pg=PA236&lpg=PA236&dq=sigaddset(%26t-%3Epending.signal,+SIGKILL)&source=bl&ots=WdECa1xSGp&sig=ACfU3U2lxZGJHDp4gBoZBrdI-tke51T35g&hl=zh-CN&sa=X&ved=2ahUKEwj6jIjPzaLqAhXCaN4KHRBZCfkQ6AEwAHoECAoQAQ#v=onepage&q&f=false)
+[9][Rout Susant K.|Learning and Building Business and System Applications][Links: Learning and Building Business and System Applications]
 
 [10][openjdk8|jsig.c](http://hg.openjdk.java.net/jdk8u/jdk8u/hotspot/file/tip/src/os/bsd/vm/jsig.c)
 
 [11][Signals Used in Oracle Solaris and Linux | Java Platform, Standard Edition Troubleshooting Guide](https://docs.oracle.com/javase/8/docs/technotes/guides/troubleshoot/signals006.html#sthref55)
 
+[12]小马哥.Spring Boot编程思想[M].中国:电子工业出版社,2019
+
+
+
+
+[Links: Learning and Building Business and System Applications]: https://books.google.com/books?id=t0JsyboZjP0C&pg=PA236&lpg=PA236&dq=sigaddset(%26t-%3Epending.signal,+SIGKILL)&source=bl&ots=WdECa1xSGp&sig=ACfU3U2lxZGJHDp4gBoZBrdI-tke51T35g&hl=zh-CN&sa=X&ved=2ahUKEwj6jIjPzaLqAhXCaN4KHRBZCfkQ6AEwAHoECAoQAQ#v=onepage&q&f=false
