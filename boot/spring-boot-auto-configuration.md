@@ -407,6 +407,7 @@ ConfigurationClassPostProcessor执行实现`BeanDefinitionRegistryPostProcessor`
 					if (bdCand == null) {
 						bdCand = holder.getBeanDefinition();
 					}
+                    //处理@Configuration类
 					if (ConfigurationClassUtils.checkConfigurationClassCandidate(bdCand, this.metadataReaderFactory)) {
 						parse(bdCand.getBeanClassName(), holder.getBeanName());
 					}
@@ -458,8 +459,46 @@ ConfigurationClassPostProcessor执行实现`BeanDefinitionRegistryPostProcessor`
 
 #### @ComponentScan的扫描逻辑
 
+看上面5.1.3，执行ComponentScanAnnotationParser的parse方法，
+做一些初始化（比如，defaultFilter配置，根据@ComponentScan注解值的一些初始化处理）
+最终执行核心方法doScan：
+~~~ComponentScanAnnotationParser.doScan
+
+	protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
+		Assert.notEmpty(basePackages, "At least one base package must be specified");
+		Set<BeanDefinitionHolder> beanDefinitions = new LinkedHashSet<>();
+		for (String basePackage : basePackages) {
+            //根据类路径和includeFilter、excludeFilter找到符合条件的组件
+			Set<BeanDefinition> candidates = findCandidateComponents(basePackage);
+			for (BeanDefinition candidate : candidates) {
+                //获取scope
+				ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(candidate);
+				candidate.setScope(scopeMetadata.getScopeName());
+                //生成bean name
+				String beanName = this.beanNameGenerator.generateBeanName(candidate, this.registry);
+				if (candidate instanceof AbstractBeanDefinition) {
+                    //主要设置该bean是否可以autowired到其他bean
+					postProcessBeanDefinition((AbstractBeanDefinition) candidate, beanName);
+				}
+				if (candidate instanceof AnnotatedBeanDefinition) {
+                    //查找并设置一些通用的注解的值
+					AnnotationConfigUtils.processCommonDefinitionAnnotations((AnnotatedBeanDefinition) candidate);
+				}
+				if (checkCandidate(beanName, candidate)) {
+					BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(candidate, beanName);
+					definitionHolder =
+							AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+					beanDefinitions.add(definitionHolder);
+                    //注册beandefinition
+					registerBeanDefinition(definitionHolder, this.registry);
+				}
+			}
+		}
+		return beanDefinitions;
+	}
 
 
+~~~
 
 
 #### @Import的处理逻辑和spring对@EnableAutoConfiguration的具体处理
