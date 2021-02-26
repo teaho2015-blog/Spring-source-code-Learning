@@ -9,6 +9,7 @@
 * [Spring SPI与Java SPI、Dubbo SPI](boot/spring-spi.md)
 * [SpringBoot外部化配置分析](boot/spring-boot-config.md)
 * [Spring Boot自动装配](boot/spring-boot-auto-configuration.md)
+* [Spring注解历史](./spring-annotation-history.md)
 * [Spring Boot Loader的分析](boot/spring-boot-loader.md)
 
 ## PART Ⅱ Spring核心实现
