@@ -24,7 +24,7 @@
 
 [12]小马哥.Spring Boot编程思想[M].中国:电子工业出版社,2019
 
-
+[13][Oracle|Java SE 8 doc|JAR File Specification](https://docs.oracle.com/javase/8/docs/technotes/guides/jar/jar.html)
 
 
 [Links: Learning and Building Business and System Applications]: https://books.google.com/books?id=t0JsyboZjP0C&pg=PA236&lpg=PA236&dq=sigaddset(%26t-%3Epending.signal,+SIGKILL)&source=bl&ots=WdECa1xSGp&sig=ACfU3U2lxZGJHDp4gBoZBrdI-tke51T35g&hl=zh-CN&sa=X&ved=2ahUKEwj6jIjPzaLqAhXCaN4KHRBZCfkQ6AEwAHoECAoQAQ#v=onepage&q&f=false
