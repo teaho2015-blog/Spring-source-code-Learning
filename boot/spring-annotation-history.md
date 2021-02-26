@@ -4,10 +4,10 @@
 
 我先来简单的聊聊Spring注解的发展史。  
 Spring1.x时代，那时候注解的概念刚刚兴起，仅支持如@ManagedResource和@Transactional等注解。那时XML配置方式是唯一选择。  
-到了2.x时代Spring的注解体系有了雏形，属于“过渡时代”，引入了 @Autowired 、 @Controller 这一系列骨架式的注解。不过尚未完全替换XML配置驱动。
+到了2.x时代Spring的注解体系有了雏形，属于“过渡时代”，引入了 @Autowired 、 @Controller 这一系列骨架式的注解。不过尚未完全替换XML配置驱动。  
 Spring 3.x是里程碑式的时代，它引入了配置类@Configuration及@ComponentScan，使我们可以替换XML配置方式，全面拥抱Spring注解，在3.1抽象了一套全新的配置属性API，包括Environment和PropertySources这两个核心API。  
-Spring4.X是完善时代，趋于完善，引入了@Conditional（条件化注解），@Repeatable等。
-当下是5.X时代，是SpringBoot2.0的底层核心框架，变化不大，引入了一个@Indexed注解，以提升应用启动性能的。
+Spring4.X是完善时代，趋于完善，引入了@Conditional（条件化注解），@Repeatable等。  
+当下是5.X时代，是SpringBoot2.0的底层核心框架，变化不大，引入了一个@Indexed注解，以提升应用启动性能的。  
 好了，以上是Spring注解的发展史，接下来针对场景做些归类。
 
 ##Spring核心注解按场景分类
