@@ -269,9 +269,9 @@ public class LaunchedURLClassLoader extends URLClassLoader {
 ### 加载文件
 
 我们启动可执行的jar包（Spring Boot应用）时，会发现不用解压缩jar就加载了目标类。原理是什么呢？
-（另一个例子，以往打war包发布到tomcat中，我们会发现tomcat会explode解压war包再执行）
+（举个不一样的例子，以往打war包发布到tomcat中，我们会发现tomcat会explode解压war包再执行）
 
-用于支持加载嵌套jar的核心类是org.springframework.boot.loader.jar.JarFile它使你可以从标准jar文件或嵌套的子jar数据加载jar内容。
+用于支持加载嵌套jar的核心类是org.springframework.boot.loader.jar.JarFile它使你可以从标准jar文件或嵌套的子jar中加载jar内容。
 首次加载时，每个JarEntry的位置都映射到外部jar的物理文件偏移量，我们可以通过查找外部jar的适当部分来加载特定的嵌套条目。
 ~~~
 myapp.jar

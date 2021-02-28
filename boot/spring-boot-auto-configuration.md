@@ -329,7 +329,7 @@ ConfigurationClassPostProcessor执行实现`BeanDefinitionRegistryPostProcessor`
 
 
 	protected void processConfigurationClass(ConfigurationClass configClass) throws IOException {
-        //使用conditionEvaluator进行验证（conditionEvaluator是对各种条件配置注解（@ConditionalXXX）的处理校验器）
+        //使用conditionEvaluator进行验证（conditionEvaluator是对各种条件配置注解（@Conditional）的处理校验器）
 		if (this.conditionEvaluator.shouldSkip(configClass.getMetadata(), ConfigurationPhase.PARSE_CONFIGURATION)) {
 			return;
 		}
@@ -497,6 +497,125 @@ ConfigurationClassPostProcessor执行实现`BeanDefinitionRegistryPostProcessor`
 		return beanDefinitions;
 	}
 
+
+~~~
+
+
+#### 条件注解的实现原理
+
+上面在processConfigurationClass的源码解读中，我提到“使用conditionEvaluator进行验证（conditionEvaluator是对各种条件配置注解（@Conditional）的处理校验器）”。
+
+我们看看在引入mvc组件的自动装配类。
+~~~
+@Configuration
+@ConditionalOnWebApplication(type = Type.SERVLET)
+@ConditionalOnClass({ Servlet.class, DispatcherServlet.class, WebMvcConfigurer.class })
+@ConditionalOnMissingBean(WebMvcConfigurationSupport.class)
+@AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE + 10)
+@AutoConfigureAfter({ DispatcherServletAutoConfiguration.class,
+		TaskExecutionAutoConfiguration.class, ValidationAutoConfiguration.class })
+public class WebMvcAutoConfiguration {
+~~~
+
+诸如@ConditionalOnWebApplication、@ConditionalOnClass、@ConditionalOnMissingBean是Spring提供的一类注解--条件注解。
+条件注解的作用是能够在应用运行时动态选择符合条件的bean。
+比如上面的`@ConditionalOnClass(xxx.class)`，作用是在加载过程中判断存在xxx类才加载该配置类。
+
+##### 一些概念
+
+* ConditionEvaluator处理条件注解的评估器。
+
+* `Condition`单个条件的抽象。
+
+* `@Conditional`注解，指定仅当所有指定条件都匹配时，组件才有资格注册。
+~~~
+
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Conditional {
+
+    //必须匹配所有Condition的实现类，才能被注册
+	Class<? extends Condition>[] value();
+
+}
+~~~
+
+以@ConditionalOnClass实现（代码如下）为例，
+OnClassCondition类实现了Condition接口是实际条件判断者，
+ConditionEvaluator类获取OnClassCondition并实例化进行判断。
+~~~
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Conditional(OnClassCondition.class)
+public @interface ConditionalOnClass {
+	Class<?>[] value() default {};
+	String[] name() default {};
+
+}
+~~~
+
+
+
+##### ConditionEvaluator的执行分析
+
+条件评估存在两个阶段：
+Configuration类解析阶段（ConfigurationPhase.PARSE_CONFIGURATION）、
+bean注册阶段（ConfigurationPhase.REGISTER_BEAN）。
+
+我们来分析条件评估器(ConditionEvaluator)的核心方法shouldSkip：
+~~~
+
+class ConditionEvaluator {
+
+	private final ConditionContextImpl context;
+
+    //省略
+    
+	public boolean shouldSkip(@Nullable AnnotatedTypeMetadata metadata, @Nullable ConfigurationPhase phase) {
+        //没有条件注解跳过
+        if (metadata == null || !metadata.isAnnotated(Conditional.class.getName())) {
+			return false;
+		}
+        //参数phase为空的话判断阶段
+		if (phase == null) {
+			if (metadata instanceof AnnotationMetadata &&
+					ConfigurationClassUtils.isConfigurationCandidate((AnnotationMetadata) metadata)) {
+				return shouldSkip(metadata, ConfigurationPhase.PARSE_CONFIGURATION);
+			}
+			return shouldSkip(metadata, ConfigurationPhase.REGISTER_BEAN);
+		}
+
+        //获取该元数据的条件注解的Conditions，并实例化。
+		List<Condition> conditions = new ArrayList<>();
+		for (String[] conditionClasses : getConditionClasses(metadata)) {
+			for (String conditionClass : conditionClasses) {
+				Condition condition = getCondition(conditionClass, this.context.getClassLoader());
+				conditions.add(condition);
+			}
+		}
+        //对条件类进行排序。
+		AnnotationAwareOrderComparator.sort(conditions);
+
+		for (Condition condition : conditions) {
+			ConfigurationPhase requiredPhase = null;
+            //获取条件的评估阶段，用于跳过不在该阶段的条件
+			if (condition instanceof ConfigurationCondition) {
+				requiredPhase = ((ConfigurationCondition) condition).getConfigurationPhase();
+			}
+            //判断条件是否匹配，例如，执行OnClassCondition的matches方法
+			if ((requiredPhase == null || requiredPhase == phase) && !condition.matches(this.context, metadata)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+    //省略
+
+}
 
 ~~~
 
