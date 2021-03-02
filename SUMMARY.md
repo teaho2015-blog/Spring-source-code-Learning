@@ -11,6 +11,7 @@
 * [Spring Boot自动装配](boot/spring-boot-auto-configuration.md)
 * [Spring注解历史](boot/spring-annotation-history.md)
 * [Spring Boot Loader的分析](boot/spring-boot-loader.md)
+* [Spring Boot Actuator分析](boot/spring-boot-actuator.md)
 
 ## PART Ⅱ Spring核心实现
 * [Spring IoC容器](ioc/spring-ioc容器.md)
