@@ -3,9 +3,9 @@
 ## 介绍
 
 Spring Boot Actuator是一个特殊存在，
-它一个需要额外引入的库，可是它又在Spring Boot的文档中。
-Spring Cloud应用都引入了它，比如API Gateway、Alibaba Nacos、config server等。
-Spring Boot的文档标题将它和`Production-ready features`（生产就绪特性）捆绑在一起。
+它是一个需要额外引入的库，可是它又在Spring Boot的文档中。
+而Spring Cloud应用都引入了它，比如API Gateway、Alibaba Nacos、config server等。
+Spring Boot的文档标题将它和`Production-ready features`（生产就绪特性）这一名词捆绑在一起。
 
 先谈谈它的定义和功能：
 > Spring Boot includes a number of additional features to help you monitor and manage your application when you push it to production. You can choose to manage and monitor your application by using HTTP endpoints or with JMX. Auditing, health, and metrics gathering can also be automatically applied to your application.
@@ -18,7 +18,7 @@ spring-boot-actuator模块包含了所有的Spring Boot生产就绪特性。
 
 我翻阅了不少资料，“生产就绪”这一概念是众说纷纭的，
 我认为Spring Boot定义的“生产就绪”是狭窄的，
-在开发工程师的角度来看，我更认同小马哥在《Spring Boot编程思想》提及的[12 factor app](https://12factor.net/)
+在开发工程师的角度来看，我更认同小马哥在《Spring Boot编程思想》说到的，将“生产就绪”等价于[12 factor app](https://12factor.net/)。
 
 不过，Spring Boot这么定义也有其道理，毕竟其他未被Spring Boot囊括进“生产就绪”的特性（诸如外部化配置），
 它们具有通用性，也就是说，像外部化配置、基准代码它本身就是一个好的应该奉行的特性，而不是说要“生产就绪”的应用才应该有。
@@ -41,7 +41,7 @@ Actuator端点（endpoint）使你可以监控你的应用和与之交互，
 比如health端点提供了应用的健康信息，
 比如我在Spring Boot关闭分析一章中谈到的用于优雅关闭应用的shutdown端点，
 比如我们能通过Actuator接口loggers在运行时改变日志级别。  
-每个端点均可独立启用或禁用。
+我们通过HTTP或JMX调用端点，每个端点均可独立启用或禁用。
 
 `@Endpoint`注解用于声明端点。
 `@WriteOperation`、`@ReadOperation`、`@DeleteOperation`注解，用于标注endpoint类的请求方法。
@@ -57,7 +57,7 @@ Actuator端点（endpoint）使你可以监控你的应用和与之交互，
 以mvc为例，不看源码前，看过mvc或webflux源码的朋友就能猜出来Actuator多半是通过增加自定义的handlerMapping来解析及匹配endpoint。
 事实也是这样。我这里谈一下找到endpoint并转化为handlerMethod的过程。
 
-通过注册的bean--EndpointsSupplier，找到endpoints并转换为DiscoveredWebEndpoint。
+Endpoint注册过程是通过注册的bean--EndpointsSupplier，找到endpoints并转换为DiscoveredWebEndpoint。
 ~~~
 
 public abstract class EndpointDiscoverer<E extends ExposableEndpoint<O>, O extends Operation>
@@ -182,4 +182,10 @@ public class SimpleMetricHandler {
 
 当然这是简单实现，像敝司我们架构组的两位负责监控的同事，写监控包做到无感知的运行时自定义打tag，
 收集各种公司需要的指标数据。对Spring Boot应用，他们也是通过Actuator metric去做自定义。
+
+## 总结
+
+本文介绍了Actuator的定义及设计目的。紧接着从原理角度介绍了主要特性Endpoint的概念、原理及自定义实现。
+并介绍了Metric的概念及自定义实现。
+
 
