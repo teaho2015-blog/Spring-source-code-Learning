@@ -15,6 +15,7 @@
 
 ## PART Ⅱ Spring核心实现
 * [Spring IoC容器](ioc/spring-ioc容器.md)
+    * [bean的生命周期](ioc/spring-bean-life.md)
 * Spring AOP
 * [Spring spel]()
 

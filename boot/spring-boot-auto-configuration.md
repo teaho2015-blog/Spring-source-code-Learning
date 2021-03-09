@@ -8,16 +8,6 @@
 * 又是如何加载我们引入进来的starter-redis，starter-web、starter-webflux等，他们是如何初始化的呢。
 
 我们可以带着这些疑问去挖掘真相。
-~~~
-@SpringBootApplication
-public class ApplicationMain {
-
-    public static void main(String[] args) {
-        ConfigurableApplicationContext ctx = SpringApplication.run(ApplicationMain.class, args);
-    }
-
-}
-~~~
 
 Spring Boot官方文档对于自动装配的描述：
 
@@ -36,6 +26,16 @@ Spring的注解历史我在该篇文章有做说明：[Spring注解历史](./spr
 知道有哪些注解及作用有便于我接下来的代码分析。
 
 在“什么是自动装配”一节中，我写了一个启动Spring Boot应用的代码，并抛出了问题。
+~~~
+@SpringBootApplication
+public class ApplicationMain {
+
+    public static void main(String[] args) {
+        ConfigurableApplicationContext ctx = SpringApplication.run(ApplicationMain.class, args);
+    }
+
+}
+~~~
 
 这代码就加了@SpringBootApplication注解和`SpringApplication.run(ApplicationMain.class, args)`。
 `SpringApplication.run(ApplicationMain.class, args)`我在[Spring boot启动原理](./spring-boot-initialization.md)已经做了源码分析。  
