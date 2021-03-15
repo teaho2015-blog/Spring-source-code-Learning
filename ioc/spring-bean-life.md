@@ -2,9 +2,9 @@
 
 ## 介绍
 
-我们知道，Spring IOC容器能够管理对象创建，负责依赖注入，负责管理对象生命周期。这是Spring的基础功能  。  
+我们知道，Spring IOC容器能够管理对象创建，负责依赖注入，负责管理对象生命周期。这是Spring的基础功能。  
 由SpringApplication和ApplicationContext的分析中，我们知道在对象实例化前的Spring应用启动阶段，
-Spring做了大量工作，那么我们要问了，
+Spring做了大量工作，接下来在对象实例化我们提出这些问题，
 * 究竟bean在什么时候创建，又是在什么时候销毁的呢？
 * 在bean的生命周期中有没有一些拓展点可以供我们拓展呢？
 
@@ -12,7 +12,7 @@ Spring做了大量工作，那么我们要问了，
 
 ## 创建、销毁时机和创建过程分析
 
-这是BeanFactory的创建和销毁bean的概览流程。
+这是BeanFactory的创建和销毁bean的流程。
 ![spring-bean-life.png](spring-bean-life.png)
 
 ### 创建时机
@@ -28,6 +28,7 @@ Spring应用上下文在invokeBeanFactoryPostProcessors、finishBeanFactoryIniti
 * AutowiredAnnotationBeanPostProcessor 是处理@Autowired和@Value和@javax.inject.Inject
 * CommonAnnotationBeanPostProcessor jsr250注解如javax.annotation.Resource、@PreDestroy、@PostConstruct的处理
 
+<!-- 待添加CustomAutowireConfigurer、QualifierAnnotationAutowireCandidateResolver源码分析-->
 
 ### 销毁时机
 
@@ -47,7 +48,8 @@ Spring应用上下文在invokeBeanFactoryPostProcessors、finishBeanFactoryIniti
 * BeanPostProcessor 可以新bean实例化前后做一些自定义操作。
 * InitializingBean、DisposableBean、initMethod、destroyMethod 提供给bean的初始化和销毁的感知处理
 * BeanDefinitionRegistryPostProcessor 可用于增加额外beanDefinition，在Spring上下文refresh的invokeBeanFactoryPostProcessors时调用。
-
+* SmartInitializingSingleton接口 在所有单例bean都被初始化完成后回调执行，
+  以便在常规实例化后执行一些初始化，避免意外的早期初始化带来的副作用（例如，来自ListableBeanFactory.getBeansOfType调用），懒加载的bean不能触发执行。
 
 ## 附录：源码分析
 
@@ -644,7 +646,7 @@ singletonFactory.getObject()会触发调用核心方法createBean。
 
 ## References
 
-[Spring framework reference|1.3.1. Naming Beans](https://docs.spring.io/spring-framework/docs/5.1.5.RELEASE/spring-framework-reference/core.html#beans-beanname)
-
+[Spring framework reference|1.3.1. Naming Beans](https://docs.spring.io/spring-framework/docs/5.1.5.RELEASE/spring-framework-reference/core.html#beans-beanname)  
+[Spring framework reference|1.8. Container Extension Points](https://docs.spring.io/spring-framework/docs/5.1.5.RELEASE/spring-framework-reference/core.html#beans-factory-extension)
 
 
