@@ -32,4 +32,7 @@
 
 [16][五月的仓颉|【Spring源码分析】Bean加载流程概览](https://www.cnblogs.com/xrq730/p/6285358.html)
 
+[17][agilemodeling.com|UML 2 Sequence Diagrams|时序图](http://www.agilemodeling.com/artifacts/sequenceDiagram.htm)
+
+
 [Links: Learning and Building Business and System Applications]: https://books.google.com/books?id=t0JsyboZjP0C&pg=PA236&lpg=PA236&dq=sigaddset(%26t-%3Epending.signal,+SIGKILL)&source=bl&ots=WdECa1xSGp&sig=ACfU3U2lxZGJHDp4gBoZBrdI-tke51T35g&hl=zh-CN&sa=X&ved=2ahUKEwj6jIjPzaLqAhXCaN4KHRBZCfkQ6AEwAHoECAoQAQ#v=onepage&q&f=false

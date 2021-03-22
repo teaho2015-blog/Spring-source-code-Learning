@@ -15,12 +15,12 @@ public class ApplicationMain {
 
 ~~~
 
-执行如上代码，Spring Boot程序启动成功。  
+执行如上代码，Spring Boot程序启动成功。事实上启动Spring Boot应用离不开SpringApplication。  
 所以，我们跟随`SpringApplication`的脚步，开始从源码角度分析Spring Boot的初始化过程。
 
 btw，可参看[例子](#例子)一节，我对Spring Boot启动的拓展点都做了demo，可参照下面源码分析进行理解。
 
-SpringApplication文档有一句话说了它做了什么（目的）：
+文档有一句话说了SpringApplication做了什么（目的）：
 > Create an appropriate ApplicationContext instance (depending on your classpath)
   Register a CommandLinePropertySource to expose command line arguments as Spring properties
   Refresh the application context, loading all singleton beans
@@ -441,7 +441,6 @@ btw，如果是tomcat server的话，spring boot会启动多一个线程防止�
 
 ## 例子
 
-
 在github里，我把Spring Boot应用启动的拓展组件（自定义的应用初始器、监听器、事件、ApplicationRunner）都写了例子，可参照阅读。
 [代码在这 | spring-boot-none-startup](https://github.com/teaho2015-blog/spring-source-code-learning-demo/tree/master/spring-boot-none-startup)
 
@@ -473,34 +472,6 @@ btw，如果是tomcat server的话，spring boot会启动多一个线程防止�
 2020-05-20 18:30:12.500  INFO 81568 --- [       Thread-3] n.t.d.s.b.s.n.s.l.LoggingLifeCycle       : In Life cycle bean stop().
 
 ~~~
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

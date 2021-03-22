@@ -28,7 +28,13 @@ Spring应用上下文在invokeBeanFactoryPostProcessors、finishBeanFactoryIniti
 * AutowiredAnnotationBeanPostProcessor 是处理@Autowired和@Value和@javax.inject.Inject
 * CommonAnnotationBeanPostProcessor jsr250注解如javax.annotation.Resource、@PreDestroy、@PostConstruct的处理
 
-<!-- 待添加CustomAutowireConfigurer、QualifierAnnotationAutowireCandidateResolver源码分析-->
+<!-- 
+待添加CustomAutowireConfigurer、QualifierAnnotationAutowireCandidateResolver源码分析 https://fangshixiang.blog.csdn.net/article/details/100890879
+     
+ ObjectProvider用法分析
+ 
+ 分析getObjectForBeanInstance方法源码和我们一般定义的FactoryBean的初始化入口
+-->
 
 ### 销毁时机
 
