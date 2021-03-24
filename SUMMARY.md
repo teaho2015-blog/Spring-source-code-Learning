@@ -17,6 +17,9 @@
 
 * Spring Cloud Commons
     * [Spring Cloud负载均衡器--Spring Cloud Commons、RestTemplate、Open Feign、Ribbon的实现分析](cloud/spring-cloud-load-balancer.md)
+* Spring Cloud Context
+    * [NamedContextFactory](cloud/spring-cloud-NamedContextFactory.md)
+
 
 ## PART Ⅲ Spring核心实现
 
