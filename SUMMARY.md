@@ -9,7 +9,6 @@
 * [Spring SPI与Java SPI、Dubbo SPI](boot/spring-spi.md)
 * [SpringBoot外部化配置分析](boot/spring-boot-config.md)
 * [Spring Boot自动装配](boot/spring-boot-auto-configuration.md)
-* [Spring注解历史](boot/spring-annotation-history.md)
 * [Spring Boot Loader的分析](boot/spring-boot-loader.md)
 * [Spring Boot Actuator分析](boot/spring-boot-actuator.md)
 
@@ -25,6 +24,7 @@
 
 * [Spring IoC容器](ioc/spring-ioc容器.md)
     * [bean的生命周期](ioc/spring-bean-life.md)
+* [Spring注解历史](core/spring-annotation-history.md)
 * Spring AOP
 * [Spring spel]()
 
