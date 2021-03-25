@@ -806,6 +806,108 @@ public class ReflectiveFeign extends Feign {
 * `LoadBalancerCommand` ribbon的rxJava实现，执行负载流程逻辑的组件。
 * `ILoadBalancer` ribbon的负载均衡器抽象。 
 
+#### 熔断
+
+在FeignClientsConfiguration中，
+当配置了`feign.hystrix.enabled`,Feign Builder使用`HystrixFeign.builder()`。
+
+所以build的时候新建HystrixInvocationHandler和HystrixDelegatingContract实例。
+~~~
+    Feign build(final FallbackFactory<?> nullableFallbackFactory) {
+      super.invocationHandlerFactory(new InvocationHandlerFactory() {
+        @Override
+        public InvocationHandler create(Target target,
+                                        Map<Method, MethodHandler> dispatch) {
+          return new HystrixInvocationHandler(target, dispatch, setterFactory,
+              nullableFallbackFactory);
+        }
+      });
+      super.contract(new HystrixDelegatingContract(contract));
+      return super.build();
+    }
+~~~
+
+来看看HystrixInvocationHandler的hystrix调用代码
+~~~
+final class HystrixInvocationHandler implements InvocationHandler {
+   //省略
+
+  @Override
+  public Object invoke(final Object proxy, final Method method, final Object[] args)
+      throws Throwable {
+   //省略
+    HystrixCommand<Object> hystrixCommand =
+        new HystrixCommand<Object>(setterMethodMap.get(method)) {
+            
+          //实际执行
+          @Override
+          protected Object run() throws Exception {
+            try {
+              return HystrixInvocationHandler.this.dispatch.get(method).invoke(args);
+            } catch (Exception e) {
+              throw e;
+            } catch (Throwable t) {
+              throw (Error) t;
+            }
+          }
+
+          @Override
+          protected Object getFallback() {
+            if (fallbackFactory == null) {
+              return super.getFallback();
+            }
+            try {
+              //用配置的fallbackFactory创建fallback实例
+              Object fallback = fallbackFactory.create(getExecutionException());
+              Object result = fallbackMethodMap.get(method).invoke(fallback, args);
+              //根据fallback对象的returntype解析包装内的结果返回
+              if (isReturnsHystrixCommand(method)) {
+                return ((HystrixCommand) result).execute();
+              } else if (isReturnsObservable(method)) {
+                // Create a cold Observable
+                return ((Observable) result).toBlocking().first();
+              } else if (isReturnsSingle(method)) {
+                // Create a cold Observable as a Single
+                return ((Single) result).toObservable().toBlocking().first();
+              } else if (isReturnsCompletable(method)) {
+                ((Completable) result).await();
+                return null;
+              } else {
+                return result;
+              }
+            } catch (IllegalAccessException e) {
+              // shouldn't happen as method is public due to being an interface
+              throw new AssertionError(e);
+            } catch (InvocationTargetException e) {
+              // Exceptions on fallback are tossed by Hystrix
+              throw new AssertionError(e.getCause());
+            }
+          }
+        };
+    
+    //根据方法的return去返回结果
+    if (Util.isDefault(method)) {
+      return hystrixCommand.execute();
+    } else if (isReturnsHystrixCommand(method)) {
+      return hystrixCommand;
+    } else if (isReturnsObservable(method)) {
+      // Create a cold Observable
+      return hystrixCommand.toObservable();
+    } else if (isReturnsSingle(method)) {
+      // Create a cold Observable as a Single
+      return hystrixCommand.toObservable().toSingle();
+    } else if (isReturnsCompletable(method)) {
+      return hystrixCommand.toObservable().toCompletable();
+    }
+    return hystrixCommand.execute();
+  }
+
+   //省略
+}
+~~~
+
+
+
 ## Netflix Ribbon
 
 Spring Cloud Feign并没有用到Spring Cloud Commons的定义的负载均衡逻辑，
@@ -823,6 +925,8 @@ Ribbon是一个客户端负载均衡（client side IPC）库。提供如下特�
 
 
 ### 核心组件
+
+Ribbon组件初始化原理看该文 [NamedContextFactory](spring-cloud-NamedContextFactory.md)。
 
 Feign和@LoadBalanced RestTemplate用到的Ribbon组件并不完全相同。
 他们用到的一些核心组件：
@@ -934,7 +1038,7 @@ IPing接口，定义“ping”逻辑去检查server是否存活。有如下实�
 ~~~
 public interface IClient<S extends ClientRequest, T extends IResponse> {
     
-    //执行请求并发挥response
+    //执行请求并返回response
     public T execute(S request, IClientConfig requestConfig) throws Exception; 
 }
 
@@ -945,19 +1049,79 @@ public interface IClient<S extends ClientRequest, T extends IResponse> {
 
 负载均衡的RestTemplate用该类进行URI重组和Server选定。
 
+#### IClientConfig
 
+默认实现`DefaultClientConfigImpl`。
 
+我们可通过如下形式定义配置：
+~~~
+## 默认配置
+ribbon:
+  NFLoadBalancerRuleClassName: net.teaho.demo.spring.cloud.web.client.ribbon.SimpleRule
+  ServerListRefreshInterval: 5000
+## 对应服务配置
+spring-cloud-web-demo:
+  ribbon:
+    NFLoadBalancerRuleClassName: net.teaho.demo.spring.cloud.web.client.ribbon.SimpleRule
+    ServerListRefreshInterval: 5000
+~~~
 
-<!-- ribbon
-RestTemplate  ClientHttpRequestInterceptor LoadBalancerInterceptor实现
+有哪些可供自定义的配置呢？可看`CommonClientConfigKey`定义的配置key值。
 
-RibbonLoadBalancerClient
+##### 实现原理
 
-SpringClientFactory
+与Spring Boot不同，Ribbon的配置实现类DefaultClientConfigImpl是通过Archaius来管理配置的。
 
+那么Spring的配置时如何传递到Ribbon的呢。
+实际上在spring-cloud-netflix-archaius的ArchaiusAutoConfiguration做了如下兼容：
+~~~
+			config.addConfiguration(envConfig,
+					ConfigurableEnvironmentConfiguration.class.getSimpleName());
+~~~
+envConfig为ConfigurableEnvironmentConfiguration类：
+将Spring的Environment配置适配成org.apache.commons.configuration.Configuration供Archaius读取。
 
+#### ServerListUpdater
+
+ServerListUpdater
+~~~
+//该接口定义了给DynamicServerListLoadBalancer使用的动态更新服务列表的策略
+public interface ServerListUpdater {
+    /**
+     * an interface for the updateAction that actually executes a server list update
+     */
+    public interface UpdateAction {
+        void doUpdate();
+    }
+    void start(UpdateAction updateAction);
+    void stop();
+    String getLastUpdate();
+    long getDurationSinceLastUpdateMs();
+    int getNumberMissedCycles();
+    int getCoreThreads();
+}
+
+~~~
+
+默认实现PollingServerListUpdater类。
+该类原理是通过ScheduledThreadPoolExecutor进行定时执行。
+
+谈谈该类的两个属性：
+* initialDelayMs 初始化延迟时间
+* refreshIntervalMs 刷新循环时间，对应下面配置
+
+可通过如下配置更改拉取服务列表的时间间隔：
+~~~
+ribbon:
+  ServerListRefreshInterval: 5000
+${服务名}:
+  ribbon:
+    ServerListRefreshInterval: 5000
+~~~
+
+<!--
+## 客户端负载均衡
 -->
-
 
 
 ## Reference
