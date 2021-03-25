@@ -30,10 +30,13 @@ Spring应用上下文在invokeBeanFactoryPostProcessors、finishBeanFactoryIniti
 
 <!-- 
 待添加CustomAutowireConfigurer、QualifierAnnotationAutowireCandidateResolver源码分析 https://fangshixiang.blog.csdn.net/article/details/100890879
-     
+     https://docs.spring.io/spring-framework/docs/5.1.x/spring-framework-reference/core.html#beans-autowired-annotation-qualifiers
+ 
  ObjectProvider用法分析
  
  分析getObjectForBeanInstance方法源码和我们一般定义的FactoryBean的初始化入口
+ 
+ 
 -->
 
 ### 销毁时机
