@@ -1055,11 +1055,11 @@ public interface IClient<S extends ClientRequest, T extends IResponse> {
 
 我们可通过如下形式定义配置：
 ~~~
-## 默认配置
+//默认配置
 ribbon:
   NFLoadBalancerRuleClassName: net.teaho.demo.spring.cloud.web.client.ribbon.SimpleRule
   ServerListRefreshInterval: 5000
-## 对应服务配置
+//对应服务配置
 spring-cloud-web-demo:
   ribbon:
     NFLoadBalancerRuleClassName: net.teaho.demo.spring.cloud.web.client.ribbon.SimpleRule
