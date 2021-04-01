@@ -33,9 +33,8 @@ spring-boot-actuator模块包含了所有的Spring Boot生产就绪特性。
 3. 从源码角度解释实现
 
 
-### Actuator相关概念
 
-#### Endpoint
+### Endpoint
 
 Actuator端点（endpoint）使你可以监控你的应用和与之交互，
 比如health端点提供了应用的健康信息，
@@ -47,12 +46,12 @@ Actuator端点（endpoint）使你可以监控你的应用和与之交互，
 `@WriteOperation`、`@ReadOperation`、`@DeleteOperation`注解，用于标注endpoint类的请求方法。
 `HealthIndicator`是一个接口，Actuator用其收集应用健康信息。
 
-##### 自定义实现
+#### 自定义实现
   
 我在[github|spring-source-code-learning-demo](https://github.com/teaho2015-blog/spring-source-code-learning-demo)
 的spring-boot-mvc-actuator-demo模块写了自定义实现。详细参考MyHealthIndicator、SimpleEndpoint类。
 
-##### endpoint源码分析
+#### endpoint源码分析
 
 以mvc为例，不看源码前，看过mvc或webflux源码的朋友就能猜出来Actuator多半是通过增加自定义的handlerMapping来解析及匹配endpoint。
 事实也是这样。我这里谈一下找到endpoint并转化为handlerMethod的过程。

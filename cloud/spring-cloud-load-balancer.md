@@ -1107,10 +1107,9 @@ public interface ServerListUpdater {
 该类原理是通过ScheduledThreadPoolExecutor进行定时执行。
 
 谈谈该类的两个属性：
-* initialDelayMs 初始化延迟时间
-* refreshIntervalMs 刷新循环时间，对应下面配置
-
-可通过如下配置更改拉取服务列表的时间间隔：
+* initialDelayMs 初始化延迟时间，默认1s
+* refreshIntervalMs 刷新服务列表间隔时间，默认30s。  
+   可通过如下配置更改拉取服务列表的时间间隔：
 ~~~
 ribbon:
   ServerListRefreshInterval: 5000
@@ -1118,6 +1117,8 @@ ${服务名}:
   ribbon:
     ServerListRefreshInterval: 5000
 ~~~
+
+<!-- 不合理之处 -->
 
 <!--
 客户端负载均衡与服务端负载均衡的思考
