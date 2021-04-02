@@ -295,4 +295,6 @@ Loader通过自定义的URLClassLoader和URL处理器`org.springframework.boot.l
 
 ## Reference
 
-[spring-boot doc|The Executable Jar Format](https://docs.spring.io/spring-boot/docs/2.1.14.RELEASE/reference/htmlsingle/#executable-jar-jarfile)
+[1][Spring Boot doc|The Executable Jar Format](https://docs.spring.io/spring-boot/docs/2.1.14.RELEASE/reference/htmlsingle/#executable-jar-jarfile)  
+[2][esingchan|ZIP压缩算法详细分析及解压实例解释](https://www.cnblogs.com/esingchan/p/3958962.html)
+
