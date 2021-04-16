@@ -34,5 +34,9 @@
 
 [17][agilemodeling.com|UML 2 Sequence Diagrams|时序图](http://www.agilemodeling.com/artifacts/sequenceDiagram.htm)
 
+[18][林淮川|一致性算法 - Distro协议在Nacos的实践](https://cloud.tencent.com/developer/article/1697338)
+
+[19][liaochuntao|JRaft 选主流程浅析](https://www.liaochuntao.cn/2019/09/18/java-web-56/)
+
 
 [Links: Learning and Building Business and System Applications]: https://books.google.com/books?id=t0JsyboZjP0C&pg=PA236&lpg=PA236&dq=sigaddset(%26t-%3Epending.signal,+SIGKILL)&source=bl&ots=WdECa1xSGp&sig=ACfU3U2lxZGJHDp4gBoZBrdI-tke51T35g&hl=zh-CN&sa=X&ved=2ahUKEwj6jIjPzaLqAhXCaN4KHRBZCfkQ6AEwAHoECAoQAQ#v=onepage&q&f=false
