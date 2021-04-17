@@ -16,7 +16,7 @@
 
 * Spring Cloud Commons
     * [Spring Cloud负载均衡器--Spring Cloud Commons、RestTemplate、Open Feign、Ribbon的实现分析](cloud/spring-cloud-load-balancer.md)
-    * [Spring Cloud的注册与发现--Spring Cloud Commons、Netflix Eureka、Alibaba Nacos的实现分析](cloud/spring-cloud-serivce-registry-and-discovery.md)
+    * [Spring Cloud的注册与发现--Spring Cloud Commons、Alibaba Nacos的实现分析](cloud/spring-cloud-serivce-registry-and-discovery.md)
       * [Nacos分析](cloud/nacos.md)
 * Spring Cloud Context
     * [NamedContextFactory](cloud/spring-cloud-NamedContextFactory.md)

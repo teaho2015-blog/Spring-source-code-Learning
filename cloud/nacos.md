@@ -56,7 +56,7 @@ NamingProxy
 在分析Nacos的distribution打包后，我们可知naming、core为我关注重点。
 所以，分析Nacos命名服务器（Nacos Naming server）的启动，可分为三点：
 * Nacos对Spring Boot的生命周期拓展
-* Spring ioc factory的拓展点（各种PostProcessor等）
+* Spring ioc容器的拓展点（各种PostProcessor等）
 * Nocos定义的@Component、@Service组件的初始化（@PostConstruct、InitializingBean等）。
   btw, Nacos Server的启动使用`@SpringBootApplication(scanBasePackages = "com.alibaba.nacos")`做扫描，我个人认为是一个美中不足的用法。
 
@@ -286,7 +286,7 @@ com.alibaba.nacos.naming.healthcheck.HealthCheckProcessorDelegate
 getPushService().serviceChanged(service)
 -->
 
-#### 节点寻址
+### 节点寻址
 
 作为分布式系统中的Nacos集群，Nacos集群节点本身是如何相互发现的呢。
 
@@ -337,11 +337,11 @@ getPushService().serviceChanged(service)
 流程图如下：
 ![nacos-address-lookup.png](nacos-address-lookup.png)
 
-### 服务注册、发现和注销
+## 服务注册、发现和注销
 
-#### 服务注册
+### 服务注册
 
-##### Nacos Client
+#### Nacos Client
 
 我们来看spring-cloud-alibaba-nacos-discovery库的`NacosAutoServiceRegistration`实现了AbstractAutoServiceRegistration抽象类。
 在触发ServiceRegistry的实现类NacosServiceRegistry。
@@ -467,7 +467,7 @@ processServiceJSON方法会对比将接收到serviceInfo与本地对比，然后
 并在需要的时候更新本地的serviceInfo并回调eventDispatcher.serviceChanged(serviceInfo)以及DiskCache.write(serviceInfo, cacheDir)；
 HostReactor的构造器有个loadCacheAtStart参数(默认为false)，如果为true则会使用DiskCache.read(this.cacheDir)从本地文件读取serviceInfo信息来初始化serviceInfoMap。
 
-##### Nacos Server
+#### Nacos Server
 
 我们来看Nacos Server是如何注册服务的。
 
@@ -710,16 +710,23 @@ ServiceManager的核心属性是serviceMap，结构：Map(namespace, Map(group::
 ~~~
 
 
-#### 总结
+### 总结
 
 我根据源码整理的交互图：
 ![Nacos-register-instance-communication-diagram.png](Nacos-register-instance-communication-diagram.png)
 
 结合时序图、交互图我们可以看到Nacos注册服务的工作流程。
 
-### Nacos一致性算法
+## Nacos一致性算法
 
-#### Distro
+Nacos同时支持AP和CP的分布式数据一致性。
+AP采用Distro算法，而CP采用Raft算法。他们分别采用独立的存储结构和处理逻辑，互不影响。
+
+我们知道Eureka的实现是AP，Zookeeper的数据一致性实现是CP。
+而Nacos同时支持了，这是一个优点，它提供给使用者们更多的选择。
+
+
+### Distro
 
 我们来研究下Nacos中使用的alibaba自研的AP协议--Distro。目前没有公开的Distro协议资料，只能通过Nacos源码一探究竟。
 
@@ -947,11 +954,26 @@ DistroHttpDelayTaskProcessor会组装DistroHttpCombinedKeyExecuteTask，
 而最终处理经过合并的任务会被DistroDelayTaskProcessor处理组装成DistroSyncChangeTask提交给NacosExecuteTaskExecuteEngine，最后在TaskExecuteWorker.InnerWorker中执行。
 
 
-##### 总结
+#### 总结
 
 由上面分析，Distro是一个AP的一致性算法。
 
+
+### Raft
+
+自1.4.0后，Nacos的Raft实现是采用JRaft这一Raft实现库，并进行了代码抽象重构，最终下沉到nacos-core中。
+在之前版本中，Nacos自实现了一个简化版的Raft实现。我们这里来看看Raft算法。
+
+[raft官网](https://raft.github.io/)  
+[JRaft|github](https://github.com/datatechnology/jraft)
+[Raft原理动画演绎](http://thesecretlivesofdata.com/raft/)
+[Raft论文_中文翻译](https://github.com/maemual/raft-zh_cn/blob/master/raft-zh_cn.md)
+
 ## Eureka服务原理
+
+![eureka_architecture.png](eureka_architecture.png)
+
+### Eureka与Nacos的一致性算法实现比较
 
 
 
