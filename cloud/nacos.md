@@ -30,7 +30,20 @@ NamingProxy
 
 ## nacos-discovery的自动装配组件
 
-
+这里介绍nacos-discovery包声明的组件。
+* NacosDiscoveryClientAutoConfiguration
+  * NacosDiscoveryProperties Nacos的配置项，还有NacosNamingService（调用Nacos Naming服务的抽象）的初始化。
+  * NacosDiscoveryClient Spring cloud DiscoveryClient的实现。
+  * NacosWatch Nacos用于支持发送HeartbeatEvent，目前没有作用。
+* NacosRibbonClientConfiguration 
+  * NacosServerList Ribbon的ServerList实现，用于负载均衡时的服务实例列表获取。
+  * NacosServerIntrospector ServerIntrospector实现，用于判断目标Server是否是HTTPS的和获取目标Server的元数据。
+* NacosDiscoveryAutoConfiguration
+  * NacosServiceRegistry Nacos的ServiceRegistry实现，服务注册类。
+  * NacosRegistration Registration实现，代表一个服务的注册项（即一个服务的实例）。
+  * NacosAutoServiceRegistration 封装了操作NacosServiceRegistry的通用的生命周期方法。
+* NacosDiscoveryEndpointAutoConfiguration
+  * NacosDiscoveryEndpoint 是一个Actuator Endpoint，返回当前client访问过的服务的信息（HostReactor维护的）。
 
 ## Nacos Naming server启动
 
@@ -968,6 +981,7 @@ DistroHttpDelayTaskProcessor会组装DistroHttpCombinedKeyExecuteTask，
 [JRaft|github](https://github.com/datatechnology/jraft)
 [Raft原理动画演绎](http://thesecretlivesofdata.com/raft/)
 [Raft论文_中文翻译](https://github.com/maemual/raft-zh_cn/blob/master/raft-zh_cn.md)
+[共识算法：Raft](https://www.jianshu.com/p/8e4bbe7e276c)
 
 ## Eureka服务原理
 
