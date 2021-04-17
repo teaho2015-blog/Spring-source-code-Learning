@@ -1,5 +1,4 @@
 {
-
   "plugins": ["disqus",
     "mermaid",
     "include-codeblock",
@@ -24,6 +23,7 @@
       "copyright": "",
       "minHeaderCount": "10",
       "minHeaderDeep": "10"
+
     }
   }
 }
