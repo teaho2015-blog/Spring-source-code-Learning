@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="GBK"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+       default-lazy-init="true" default-autowire="byName">
+    <bean id="userService"
+          class="com.tea.ioc.service.UserService" >
+        <property name="userDAO" ref="userDAO" />
+    </bean>
+
+    <bean id="userDAO"
+          class="com.tea.ioc.dao.impl.UserDAOImpl" >
+    </bean>
+</beans>

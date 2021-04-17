@@ -1,18 +1,31 @@
 {
+  "plugins": ["disqus",
+    "mermaid",
+    "include-codeblock",
+    "ga",
+    "anchors",
+    "plantuml",
+    "page-treeview"
+  ],
+  "pluginsConfig": {
+    "disqus": {
+      "shortName": "spring-source-code-learning-gitbook-teaho-net"
+    },
+    "include-codeblock": {
+      "template": "default",
+      "unindent": true,
+      "theme": "monokai"
+    },
+    "ga": {
+      "token": "UA-90704189-1"
+    },
+    "page-treeview": {
+      "copyright": "",
+      "minHeaderCount": "10",
+      "minHeaderDeep": "10"
 
-    "plugins": ["disqus", 
-                "mermaid",
-                "codeblock-filename", 
-                "ga"
-               ],
-    "pluginsConfig": {
-        "disqus": {
-            "shortName": "spring-source-code-learning-gitbook-teaho-net"
-        }, 
-        "ga": {
-            "token": "UA-90704189-1"
-        }
     }
+  }
 }
 
 
