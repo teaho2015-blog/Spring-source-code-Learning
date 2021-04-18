@@ -987,11 +987,16 @@ DistroHttpDelayTaskProcessor会组装DistroHttpCombinedKeyExecuteTask，
 
 ![eureka_architecture.png](eureka_architecture.png)
 
+TBD，补齐Eureka源码分析。
+
 ### Eureka与Nacos的一致性算法实现比较
 
-
-
+在Eureka集群模式时，Eureka是采用成员Server之间相互广播数据进行数据复制和更新。
+Eureka实现了客户端对于服务注册信息的缓存，那么Eureka客户端与注册中心出现网络通信故障时，还是可以获取到服务信息。
+所以，其是AP的。
  
+Nacos的AP实现（Distro）的数据一致性策略其实类似于Eureka，Nacos成员实例通过相互之间数据复制和更新达到数据同步。
+
 ## 附录一 Nacos源码本地启动伪集群
  
 假设启动3个集群实例：
