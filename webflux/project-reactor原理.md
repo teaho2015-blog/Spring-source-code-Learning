@@ -3,7 +3,7 @@
 ## 引言
 
 spring cloud gateway目前是基于spring webflux上构建出来的（基于mvc的版本两年过去了还是在snapshot开发的状态下）。 
-而spring webflux是一个响应式编程web框架，其中的核心就是基于reactive streams规范开发出来的project reactor。
+而spring webflux是一个响应式编程web框架，其中的核心就是基于reactive streams规范开发出来的project reactor(RxJava库也是该规范的实现)。
 在编写工作于webflux或spring cloud gateway 的代码时，如果不熟悉Project Reactor很可能会被很多突如其来的Mono、Flux的operator操作搞混的，甚至会写出较为影响性能的代码。
 
 Project Reactor是开发和维护Spring框架的公司Pivotal开发的。

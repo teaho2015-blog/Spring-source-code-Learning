@@ -18,6 +18,7 @@
     * [Spring Cloud负载均衡器--Spring Cloud Commons、RestTemplate、Open Feign、Ribbon的实现分析](cloud/spring-cloud-load-balancer.md)
     * [Spring Cloud的注册与发现--Spring Cloud Commons、Alibaba Nacos的实现分析](cloud/spring-cloud-serivce-registry-and-discovery.md)
       * [Nacos分析](cloud/nacos.md)
+    * [Spring Cloud的断路器--Spring Cloud Commons定义、Netflix Hystrix实现分析](cloud/spring-cloud-circuitbreak.md)
 * Spring Cloud Context
     * [NamedContextFactory](cloud/spring-cloud-NamedContextFactory.md)
 
