@@ -40,5 +40,12 @@
 
 [20][Eureka doc|Eureka at a glance](https://github.com/Netflix/eureka/wiki/Eureka-at-a-glance)
 
+[21][Nacos文档](https://nacos.io/zh-cn/docs/what-is-nacos.html)
+
+[22][Silently9527|spring-cloud-commons reference](https://www.jianshu.com/p/a8b255c9feae)
+
+[23][github|Netflix/Hystrix|How it Works](https://github.com/Netflix/Hystrix/wiki/How-it-Works#flow2)
+
+[24][github|Hystrix|Configuration](https://github.com/Netflix/Hystrix/wiki/Configuration)
 
 [Links: Learning and Building Business and System Applications]: https://books.google.com/books?id=t0JsyboZjP0C&pg=PA236&lpg=PA236&dq=sigaddset(%26t-%3Epending.signal,+SIGKILL)&source=bl&ots=WdECa1xSGp&sig=ACfU3U2lxZGJHDp4gBoZBrdI-tke51T35g&hl=zh-CN&sa=X&ved=2ahUKEwj6jIjPzaLqAhXCaN4KHRBZCfkQ6AEwAHoECAoQAQ#v=onepage&q&f=false
