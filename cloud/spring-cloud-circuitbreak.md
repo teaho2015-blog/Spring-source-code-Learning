@@ -94,7 +94,7 @@ Observable<K> ocValue = command.toObservable();    //cold observable
 * command.queue()底层是执行`toObservable().toBlocking().toFuture()`。
 * command.observe()底层是马上订阅到Observable开始执行Command，并返回Observable。
 * command.toObservable()底层返回Observable。注意，不同于`.observe()`，此时Command流程还未执行，
-用户（开发者）执行subscribe代码后才真正开始执行Command。所以，文档称该执行方式为cold observable（冷RxJava里的概念）。
+用户（开发者）执行subscribe代码后才真正开始执行Command。所以，文档称该执行方式为cold observable（是RxJava里的概念）。
 
 接着来看第4步，熔断如何计算是否开启？
 
