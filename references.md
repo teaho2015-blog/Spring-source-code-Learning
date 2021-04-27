@@ -48,4 +48,6 @@
 
 [24][github|Hystrix|Configuration](https://github.com/Netflix/Hystrix/wiki/Configuration)
 
+[25][Martin Fowler|CircuitBreaker](https://martinfowler.com/bliki/CircuitBreaker.html)
+
 [Links: Learning and Building Business and System Applications]: https://books.google.com/books?id=t0JsyboZjP0C&pg=PA236&lpg=PA236&dq=sigaddset(%26t-%3Epending.signal,+SIGKILL)&source=bl&ots=WdECa1xSGp&sig=ACfU3U2lxZGJHDp4gBoZBrdI-tke51T35g&hl=zh-CN&sa=X&ved=2ahUKEwj6jIjPzaLqAhXCaN4KHRBZCfkQ6AEwAHoECAoQAQ#v=onepage&q&f=false
