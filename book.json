@@ -21,7 +21,7 @@
     },
     "page-treeview": {
       "copyright": "",
-      "minHeaderCount": "2",
+      "minHeaderCount": "4",
       "minHeaderDeep": "10"
 
     }
