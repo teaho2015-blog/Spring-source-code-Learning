@@ -922,8 +922,8 @@ Raft 在选举阶段就使用 Term 的判断用于保证完整性：当请求投
 #### raft 协议和 zab 协议区别
 
 **相同点**
-* 采用 quorum 来确定整个系统的一致性,这个 quorum 一般实现是集群中半数以上的服务器,  
-* zookeeper 里还提供了带权重的 quorum 实现  
+* 采用 quorum 来确定整个系统的一致性,这个 quorum 一般实现是集群中半数以上的服务器  
+* zookeeper 里还提供了带权重的 quorum 实现  
 * 都由 leader 来发起写操作
 * 都采用心跳检测存活性
 * leader election 都采用先到先得的投票方式
