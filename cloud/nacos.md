@@ -609,7 +609,7 @@ ServiceManager的核心属性是serviceMap，结构：Map(namespace, Map(group::
 ### 总结
 
 我根据源码整理的交互图：
-![Nacos-register-instance-communication-diagram.png](Nacos-register-instance-communication-diagram.png)
+[![Nacos-register-instance-communication-diagram.png](Nacos-register-instance-communication-diagram.png)](Nacos-register-instance-communication-diagram.png)
 
 结合时序图、交互图我们可以看到Nacos注册服务的工作流程。
 
@@ -634,6 +634,8 @@ Nacos的协议（Distro、JRaft）都经历过大重构，我看的是1.4.1版�
 * DistroDataStorage Distro协议数据存储抽象
 * DistroFailedTaskHandler 单方法组件接口，方法retry供distro同步任务失败时构建重试任务。
 * DistroCallback Distro任务执行回调接口
+
+#### 全量数据同步
 
 来看DistroProtocol的源码执行。
 
@@ -782,6 +784,7 @@ public class DistroLoadDataTask implements Runnable {
 全量数据同步的流程图如下：
 ![nacos-distro-full-data-sync.png](nacos-distro-full-data-sync.png)
 
+#### 增量数据同步
 
 处理增量数据时，`DistroProtocol`的`sync(DistroKey distroKey, DataOperation action, long delay)`将被调用。
 我在前面分析Nacos Server服务注册源码时简单谈到这里。
