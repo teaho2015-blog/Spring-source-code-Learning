@@ -1,4 +1,5 @@
 {
+  "title": "Spring Learning",
   "plugins": ["disqus",
     "mermaid",
     "include-codeblock",
