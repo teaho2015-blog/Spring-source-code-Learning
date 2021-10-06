@@ -1,4 +1,5 @@
 {
+  "title": "Spring Learning|teaho.net",
   "plugins": ["disqus",
     "mermaid",
     "include-codeblock",
@@ -21,7 +22,7 @@
     },
     "page-treeview": {
       "copyright": "",
-      "minHeaderCount": "10",
+      "minHeaderCount": "4",
       "minHeaderDeep": "10"
 
     }

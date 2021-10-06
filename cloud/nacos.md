@@ -149,124 +149,7 @@ public class StartingApplicationListener implements NacosApplicationListener {
                 Paths.get(EnvUtil.getNacosHome(), "logs/nacos.log"));
     }
     
-    private void injectEnvironment(ConfigurableEnvironment environment) {
-        EnvUtil.setEnvironment(environment);
-    }
-    
-    private void loadPreProperties(ConfigurableEnvironment environment) {
-        try {
-            SOURCES.putAll(EnvUtil.loadProperties(EnvUtil.getApplicationConfFileResource()));
-            environment.getPropertySources()
-                    .addLast(new OriginTrackedMapPropertySource(NACOS_APPLICATION_CONF, SOURCES));
-            registerWatcher();
-        } catch (Exception e) {
-            throw new NacosRuntimeException(NacosException.SERVER_ERROR, e);
-        }
-    }
-    
-    private void registerWatcher() throws NacosException {
-        
-        WatchFileCenter.registerWatcher(EnvUtil.getConfPath(), new FileWatcher() {
-            @Override
-            public void onChange(FileChangeEvent event) {
-                try {
-                    Map<String, ?> tmp = EnvUtil.loadProperties(EnvUtil.getApplicationConfFileResource());
-                    SOURCES.putAll(tmp);
-                } catch (IOException ignore) {
-                    LOGGER.warn("Failed to monitor file {}", ignore);
-                }
-            }
-            
-            @Override
-            public boolean interest(String context) {
-                return StringUtils.contains(context, "application.properties");
-            }
-        });
-        
-    }
-    
-    private void initSystemProperty() {
-        if (EnvUtil.getStandaloneMode()) {
-            System.setProperty(MODE_PROPERTY_KEY_STAND_MODE, "stand alone");
-        } else {
-            System.setProperty(MODE_PROPERTY_KEY_STAND_MODE, "cluster");
-        }
-        if (EnvUtil.getFunctionMode() == null) {
-            System.setProperty(MODE_PROPERTY_KEY_FUNCTION_MODE, "All");
-        } else if (EnvUtil.FUNCTION_MODE_CONFIG.equals(EnvUtil.getFunctionMode())) {
-            System.setProperty(MODE_PROPERTY_KEY_FUNCTION_MODE, EnvUtil.FUNCTION_MODE_CONFIG);
-        } else if (EnvUtil.FUNCTION_MODE_NAMING.equals(EnvUtil.getFunctionMode())) {
-            System.setProperty(MODE_PROPERTY_KEY_FUNCTION_MODE, EnvUtil.FUNCTION_MODE_NAMING);
-        }
-        
-        System.setProperty(LOCAL_IP_PROPERTY_KEY, InetUtils.getSelfIP());
-    }
-    
-    private void logClusterConf() {
-        if (!EnvUtil.getStandaloneMode()) {
-            try {
-                List<String> clusterConf = EnvUtil.readClusterConf();
-                LOGGER.info("The server IP list of Nacos is {}", clusterConf);
-            } catch (IOException e) {
-                LOGGER.error("read cluster conf fail", e);
-            }
-        }
-    }
-    
-    private void closeExecutor() {
-        if (scheduledExecutorService != null) {
-            scheduledExecutorService.shutdownNow();
-        }
-    }
-    
-    private void makeWorkDir() {
-        String[] dirNames = new String[] {"logs", "conf", "data"};
-        for (String dirName : dirNames) {
-            LOGGER.info("Nacos Log files: {}", Paths.get(EnvUtil.getNacosHome(), dirName).toString());
-            try {
-                DiskUtils.forceMkdir(new File(Paths.get(EnvUtil.getNacosHome(), dirName).toUri()));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-    
-    private void logStarting() {
-        if (!EnvUtil.getStandaloneMode()) {
-            
-            scheduledExecutorService = ExecutorFactory
-                    .newSingleScheduledExecutorService(new NameThreadFactory("com.alibaba.nacos.core.nacos-starting"));
-            
-            scheduledExecutorService.scheduleWithFixedDelay(() -> {
-                if (starting) {
-                    LOGGER.info("Nacos is starting...");
-                }
-            }, 1, 1, TimeUnit.SECONDS);
-        }
-    }
-    
-    private void judgeStorageMode(ConfigurableEnvironment env) {
-        
-        // External data sources are used by default in cluster mode
-        boolean useExternalStorage = ("mysql".equalsIgnoreCase(env.getProperty("spring.datasource.platform", "")));
-        
-        // must initialize after setUseExternalDB
-        // This value is true in stand-alone mode and false in cluster mode
-        // If this value is set to true in cluster mode, nacos's distributed storage engine is turned on
-        // default value is depend on ${nacos.standalone}
-        
-        if (!useExternalStorage) {
-            boolean embeddedStorage = EnvUtil.getStandaloneMode() || Boolean.getBoolean("embeddedStorage");
-            // If the embedded data source storage is not turned on, it is automatically
-            // upgraded to the external data source storage, as before
-            if (!embeddedStorage) {
-                useExternalStorage = true;
-            }
-        }
-        
-        LOGGER.info("Nacos started successfully in {} mode. use {} storage",
-                System.getProperty(MODE_PROPERTY_KEY_STAND_MODE), useExternalStorage ? "external" : "embedded");
-    }
+    //省略
 }
 
 ~~~
@@ -726,7 +609,7 @@ ServiceManager的核心属性是serviceMap，结构：Map(namespace, Map(group::
 ### 总结
 
 我根据源码整理的交互图：
-![Nacos-register-instance-communication-diagram.png](Nacos-register-instance-communication-diagram.png)
+[![Nacos-register-instance-communication-diagram.png](Nacos-register-instance-communication-diagram.png)](Nacos-register-instance-communication-diagram.png)
 
 结合时序图、交互图我们可以看到Nacos注册服务的工作流程。
 
@@ -751,6 +634,8 @@ Nacos的协议（Distro、JRaft）都经历过大重构，我看的是1.4.1版�
 * DistroDataStorage Distro协议数据存储抽象
 * DistroFailedTaskHandler 单方法组件接口，方法retry供distro同步任务失败时构建重试任务。
 * DistroCallback Distro任务执行回调接口
+
+#### 全量数据同步
 
 来看DistroProtocol的源码执行。
 
@@ -899,6 +784,7 @@ public class DistroLoadDataTask implements Runnable {
 全量数据同步的流程图如下：
 ![nacos-distro-full-data-sync.png](nacos-distro-full-data-sync.png)
 
+#### 增量数据同步
 
 处理增量数据时，`DistroProtocol`的`sync(DistroKey distroKey, DataOperation action, long delay)`将被调用。
 我在前面分析Nacos Server服务注册源码时简单谈到这里。
@@ -977,11 +863,91 @@ DistroHttpDelayTaskProcessor会组装DistroHttpCombinedKeyExecuteTask，
 自1.4.0后，Nacos的Raft实现是采用JRaft这一Raft实现库，并进行了代码抽象重构，最终下沉到nacos-core中。
 在之前版本中，Nacos自实现了一个简化版的Raft实现。我们这里来看看Raft算法。
 
+与 Paxos 不同 Raft 强调的是易懂（Understandability），Raft 和 Paxos 一样只要保证 n/2+1 节
+点正常就能够提供服务；raft 把算法流程分为三个子问题：选举（Leader election）、日志复制
+（Log replication）、安全性（Safety）三个子问题。
+
+#### 角色
+
+Raft 把集群中的节点分为三种状态：Leader、 Follower 、Candidate，理所当然每种状态负
+责的任务也是不一样的，Raft 运行时提供服务的时候只存在 Leader 与 Follower 两种状态；
+* Leader（领导者-日志管理）
+负责日志的同步管理，处理来自客户端的请求，与 Follower 保持这 heartBeat 的联系；
+* Follower（追随者-日志同步）
+刚启动时所有节点为Follower状态，响应Leader的日志同步请求，响应Candidate的请求，
+把请求到 Follower 的事务转发给 Leader；
+* Candidate（候选者-负责选票）
+负责选举投票，Raft 刚启动时由一个节点从 Follower 转为 Candidate 发起选举，选举出
+Leader 后从 Candidate 转为 Leader 状态；
+
+#### Term（任期）
+
+ 在 Raft 中使用了一个可以理解为周期（第几届、任期）的概念，用 Term 作为一个周期，每
+个 Term 都是一个连续递增的编号，每一轮选举都是一个 Term 周期，在一个 Term 中只能产生一
+个 Leader；当某节点收到的请求中 Term 比当前 Term 小时则拒绝该请求。
+
+#### 选举（Election）
+
+选举定时器
+
+ Raft 的选举由定时器来触发，每个节点的选举定时器时间都是不一样的，开始时状态都为
+Follower 某个节点定时器触发选举后 Term 递增，状态由 Follower 转为 Candidate，向其他节点
+发起 RequestVote RPC 请求，这时候有三种可能的情况发生：
+ 1. 该 RequestVote 请求接收到 n/2+1（过半数）个节点的投票，从 Candidate 转为 Leader，
+向其他节点发送 heartBeat 以保持 Leader 的正常运转。
+ 2. 在此期间如果收到其他节点发送过来的 AppendEntries RPC 请求，如该节点的 Term 大
+则当前节点转为 Follower，否则保持 Candidate 拒绝该请求。
+ 3. Election timeout 发生则 Term 递增，重新发起选举
+
+
+在一个 Term 期间每个节点只能投票一次，所以当有多个 Candidate 存在时就会出现每个
+Candidate 发起的选举都存在接收到的投票数都不过半的问题，这时每个 Candidate 都将 Term
+递增、重启定时器并重新发起选举，由于每个节点中定时器的时间都是随机的，所以就不会多次
+存在有多个 Candidate 同时发起投票的问题。
+
+在 Raft 中当接收到客户端的日志（事务请求）后先把该日志追加到本地的 Log 中，然后通过
+heartbeat 把该 Entry 同步给其他 Follower，Follower 接收到日志后记录日志然后向 Leader 发送
+ACK，当 Leader 收到大多数（n/2+1）Follower 的 ACK 信息后将该日志设置为已提交并追加到
+本地磁盘中，通知客户端并在下个 heartbeat 中 Leader 将通知所有的 Follower 将该日志存储在
+自己的本地磁盘中。
+
+#### 安全性（Safety）
+
+安全性是用于保证每个节点都执行相同序列的安全机制如当某个 Follower 在当前 Leader commit 
+Log 时变得不可用了，稍后可能该 Follower 又会倍选举为 Leader，这时新 Leader 可能会用新的
+Log 覆盖先前已 committed 的 Log，这就是导致节点执行不同序列；Safety 就是用于保证选举出
+来的 Leader 一定包含先前 commited Log 的机制；
+* 选举安全性（Election Safety）：每个 Term 只能选举出一个 Leader
+* Leader 完整性（Leader Completeness）：这里所说的完整性是指 Leader 日志的完整性，
+Raft 在选举阶段就使用 Term 的判断用于保证完整性：当请求投票的该 Candidate 的 Term 较大
+或 Term 相同 Index 更大则投票，该节点将容易变成 leader。
+
+#### raft 协议和 zab 协议区别
+
+**相同点**
+* 采用 quorum 来确定整个系统的一致性,这个 quorum 一般实现是集群中半数以上的服务器  
+* zookeeper 里还提供了带权重的 quorum 实现  
+* 都由 leader 来发起写操作
+* 都采用心跳检测存活性
+* leader election 都采用先到先得的投票方式
+
+**不同点**
+* zab 用的是 epoch 和 count 的组合来唯一表示一个值, 而 raft 用的是 term 和 index
+* zab 的 follower 在投票给一个 leader 之前必须和 leader 的日志达成一致,而 raft 的 follower
+  则简单地说是谁的 term 高就投票给谁
+* raft 协议的心跳是从 leader 到 follower, 而 zab 协议则相反
+* raft 协议数据只有单向地从 leader 到 follower(成为 leader 的条件之一就是拥有最新的 log),
+而 zab 协议在 discovery 阶段, 一个 prospective leader 需要将自己的 log 更新为 quorum 里面
+最新的 log,然后才好在 synchronization 阶段将 quorum 里的其他机器的 log 都同步到一致.
+
+
+
+
 [raft官网](https://raft.github.io/)  
-[JRaft|github](https://github.com/datatechnology/jraft)
-[Raft原理动画演绎](http://thesecretlivesofdata.com/raft/)
-[Raft论文_中文翻译](https://github.com/maemual/raft-zh_cn/blob/master/raft-zh_cn.md)
-[共识算法：Raft](https://www.jianshu.com/p/8e4bbe7e276c)
+[JRaft|github](https://github.com/datatechnology/jraft)  
+[Raft原理动画演绎](http://thesecretlivesofdata.com/raft/)  
+[Raft论文_中文翻译](https://github.com/maemual/raft-zh_cn/blob/master/raft-zh_cn.md)  
+[共识算法：Raft](https://www.jianshu.com/p/8e4bbe7e276c)  
 
 ## Eureka服务原理
 

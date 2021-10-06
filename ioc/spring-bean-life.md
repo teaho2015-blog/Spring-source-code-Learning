@@ -51,7 +51,7 @@ Spring应用上下文在invokeBeanFactoryPostProcessors、finishBeanFactoryIniti
 
 ### 拓展点
 
-* InstantiationAwareBeanPostProcessor
+* InstantiationAwareBeanPostProcessor 感知Bean实例化的处理器
 * MergedBeanDefinitionPostProcessor 对merged beanDefinition进行处理
 * BeanNameAware、BeanClassLoaderAware、BeanFactoryAware bean可实现这些接口获取对应资源
 * BeanPostProcessor 可以新bean实例化前后做一些自定义操作。
