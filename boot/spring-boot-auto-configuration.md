@@ -528,6 +528,7 @@ public class WebMvcAutoConfiguration {
 * `Condition`单个条件的抽象。
 
 * `@Conditional`注解，指定仅当所有指定条件都匹配时，组件才有资格注册。
+
 ~~~
 
 @Target({ElementType.TYPE, ElementType.METHOD})
