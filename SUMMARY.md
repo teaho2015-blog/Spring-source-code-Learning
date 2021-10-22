@@ -33,7 +33,7 @@
 
 ## PART Ⅳ Spring组件实现
 
-* [Spring MVC]((mvc/README.md))
+* [Spring MVC](mvc/README.md)
   * [Spring MVC启动分析](mvc/spring-mvc-startup.md)
 * [Project Reactor原理](webflux/project-reactor原理.md)
 * [Spring Webflux](webflux/webflux原理.md)
