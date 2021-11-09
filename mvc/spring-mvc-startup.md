@@ -53,7 +53,8 @@ HttpServletBean.init()
 		PropertyValues pvs = new ServletConfigPropertyValues(getServletConfig(), this.requiredProperties);
 		if (!pvs.isEmpty()) {
 			try {
-			    //讲DispatcherServlet构造成BeanWrapper，并将resource
+			    //讲DispatcherServlet构造成BeanWrapper，并将resource设进去
+			    //通过BeanWrapper的封装可以访问到 Servlet 的所有参数、资源加载器加载的资源
 				BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
 				ResourceLoader resourceLoader = new ServletContextResourceLoader(getServletContext());
 				//构造属性editor
@@ -100,40 +101,14 @@ org.springframework.web.servlet.FrameworkServlet
 				WebApplicationContextUtils.getWebApplicationContext(getServletContext());
 		WebApplicationContext wac = null;
 
-		if (this.webApplicationContext != null) {
-			// A context instance was injected at construction time -> use it
-			wac = this.webApplicationContext;
-			if (wac instanceof ConfigurableWebApplicationContext) {
-				ConfigurableWebApplicationContext cwac = (ConfigurableWebApplicationContext) wac;
-				if (!cwac.isActive()) {
-					// The context has not yet been refreshed -> provide services such as
-					// setting the parent context, setting the application context id, etc
-					if (cwac.getParent() == null) {
-						// The context instance was injected without an explicit parent -> set
-						// the root application context (if any; may be null) as the parent
-						cwac.setParent(rootContext);
-					}
-					configureAndRefreshWebApplicationContext(cwac);
-				}
-			}
-		}
-		if (wac == null) {
-			// No context instance was injected at construction time -> see if one
-			// has been registered in the servlet context. If one exists, it is assumed
-			// that the parent context (if any) has already been set and that the
-			// user has performed any initialization such as setting the context id
-			wac = findWebApplicationContext();
-		}
-		if (wac == null) {
-			// No context instance is defined for this servlet -> create a local one
-			wac = createWebApplicationContext(rootContext);
-		}
+        //省略……
 
 		if (!this.refreshEventReceived) {
 			// Either the context is not a ConfigurableApplicationContext with refresh
 			// support or the context injected at construction time had already been
 			// refreshed -> trigger initial onRefresh manually here.
 			synchronized (this.onRefreshMonitor) {
+		        //模板方法，web应用context刷新后做一些初始化，我们进入DispatcherServlet看其实现
 				onRefresh(wac);
 			}
 		}
@@ -149,8 +124,53 @@ org.springframework.web.servlet.FrameworkServlet
 
 ~~~
 
+上面调用onRefresh将会调用到实现类DispatcherServlet的实现。
+
+~~~
+DispatcherServlet
+
+	/**
+	 * 实现模板方法并调用initStrategies
+	 * 
+	 */
+	@Override
+	protected void onRefresh(ApplicationContext context) {
+		initStrategies(context);
+	}
+	
+	/**
+	 * 初始化各种策略对象
+	 * <p>May be overridden in subclasses in order to initialize further strategy objects.
+	 */
+	protected void initStrategies(ApplicationContext context) {
+	    //初始化 处理multipart的resolver
+		initMultipartResolver(context);
+		//初始化 处理语言本地化的resolver
+		initLocaleResolver(context);
+		//初始化 主题resolver
+		initThemeResolver(context);
+		//请求和处理器映射的初始化
+		initHandlerMappings(context);
+		//处理器适配器，用于调用真正的处理器
+		initHandlerAdapters(context);
+		//处理器异常resolver，一般用这个做全局异常处理
+		initHandlerExceptionResolvers(context);
+		//请求与视图的匹配器。see：DefaultRequestToViewNameTranslator
+		initRequestToViewNameTranslator(context);
+		//视图解析器，解析例如“jsp:”这样的语法。
+		initViewResolvers(context);
+		//FlashMap简单来说就是一个HashMap，用于数据保存，比如，重定向前保存数据到FlashMap，然后重定向后拿出来。
+		initFlashMapManager(context);
+	}
+
+~~~
 
 
+## 总结
 
 
-## 
+所以，我们来看看DispatcherServlet在初始化时做了什么：
+1. HttpServletBean将servlet标签下的参数拿出来，并随同包装Servlet对象包装到BeanWrapper中去
+2. FrameworkServlet初始化WebApplicationContext（如果还没有初始化和refresh）。
+3. DispatcherServlet初始化各种策略对象
+

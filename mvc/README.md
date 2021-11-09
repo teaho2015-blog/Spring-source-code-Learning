@@ -4,10 +4,9 @@
 
 ![ Mvc_Request_handling_timing_sequence ](Mvc_Request_handling_timing_sequence.png)
 
-上图是笔者在16还是17年画得图，那会儿源码看得相对粗一些，且没留下什么笔记。
+上图是笔者在16还是17年画得图，那会儿看源码没留下什么笔记。
 
 现在想对spring mvc来一次再学习。
-
 
 ## 问题
 
