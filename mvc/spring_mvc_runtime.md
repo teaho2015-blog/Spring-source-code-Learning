@@ -30,7 +30,7 @@ doService方法会设置一些框架对象，WebApplicationContext等到request�
 		HttpServletRequest processedRequest = request;
 		HandlerExecutionChain mappedHandler = null;
 		boolean multipartRequestParsed = false;
-        //
+        //1 给需要异步处理的请求使用，一般是给SPI使用，不是通用管理器
 		WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
 
 		try {
@@ -38,17 +38,20 @@ doService方法会设置一些框架对象，WebApplicationContext等到request�
 			Exception dispatchException = null;
 
 			try {
+		        //2 使用multipartResolver检查并解析出文件数据封装到MultipartFile并加到request属性中
 				processedRequest = checkMultipart(request);
 				multipartRequestParsed = (processedRequest != request);
 
 				// Determine handler for the current request.
-				mappedHandler = getHandler(processedRequest);
+				//3 找到请求处理handler
+                mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
 					noHandlerFound(processedRequest, response);
 					return;
 				}
 
 				// Determine handler adapter for the current request.
+				//4
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
@@ -106,6 +109,21 @@ doService方法会设置一些框架对象，WebApplicationContext等到request�
 				}
 			}
 		}
+	}
+	
+	//返回HandlerExecutionChain，请求处理链
+    @Nullable
+	protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+		if (this.handlerMappings != null) {
+			for (HandlerMapping mapping : this.handlerMappings) {
+                //3.1 
+				HandlerExecutionChain handler = mapping.getHandler(request);
+				if (handler != null) {
+					return handler;
+				}
+			}
+		}
+		return null;
 	}
 
 
