@@ -43,7 +43,7 @@ doService方法会设置一些框架对象，WebApplicationContext等到request�
 				multipartRequestParsed = (processedRequest != request);
 
 				// Determine handler for the current request.
-				//3 找到请求处理handler
+				//3 找到请求处理的HandlerExecutionChain，请求处理链，里面包含了interceptror
                 mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
 					noHandlerFound(processedRequest, response);
@@ -51,7 +51,7 @@ doService方法会设置一些框架对象，WebApplicationContext等到request�
 				}
 
 				// Determine handler adapter for the current request.
-				//4
+				//4 调用HandlerAdapter.supports(handler)方法去找到适合的HandlerAdapter
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
@@ -63,12 +63,13 @@ doService方法会设置一些框架对象，WebApplicationContext等到request�
 						return;
 					}
 				}
-
+                //5. 调用HandlerExecutionChain的applyPreHandle方法
 				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}
 
 				// Actually invoke the handler.
+				//6. HandlerAdapter调用HandlerExecutionChain里的handler（一般定义的spring mvc controller的handler类型是InvocableHandlerMethod）
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
 				if (asyncManager.isConcurrentHandlingStarted()) {
@@ -76,6 +77,7 @@ doService方法会设置一些框架对象，WebApplicationContext等到request�
 				}
 
 				applyDefaultViewName(processedRequest, mv);
+				//7. 调用HandlerExecutionChain的posthandle，即调用Interceptor的postHandle
 				mappedHandler.applyPostHandle(processedRequest, response, mv);
 			}
 			catch (Exception ex) {
@@ -86,6 +88,7 @@ doService方法会设置一些框架对象，WebApplicationContext等到request�
 				// making them available for @ExceptionHandler methods and other scenarios.
 				dispatchException = new NestedServletException("Handler dispatch failed", err);
 			}
+			//8. 如果了发生异常，则执行handlerExceptionResolvers集合的resolveException，最后triggerAfterCompletion
 			processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
 		}
 		catch (Exception ex) {
@@ -110,25 +113,17 @@ doService方法会设置一些框架对象，WebApplicationContext等到request�
 			}
 		}
 	}
-	
-	//返回HandlerExecutionChain，请求处理链
-    @Nullable
-	protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
-		if (this.handlerMappings != null) {
-			for (HandlerMapping mapping : this.handlerMappings) {
-                //3.1 
-				HandlerExecutionChain handler = mapping.getHandler(request);
-				if (handler != null) {
-					return handler;
-				}
-			}
-		}
-		return null;
-	}
-
 
 ~~~
 
+没错，上面就是SpringMVC的核心主流程了~  
+可是我们不禁会问， 
+* 我们写的Controller是如何被加载进SpringMVC的又是怎样在HTTP请求中被匹配到的呢？
+* Controller方法的参数是如何从HTTP字符串中转换出来的呢？
+* 如何自定义参数处理器呢？
+* ……
+
+嗯，不急，接下来继续分析。
 
 
 
