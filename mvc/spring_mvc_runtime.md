@@ -129,10 +129,123 @@ doService方法会设置一些框架对象，WebApplicationContext等到request�
 
 ## DispatcherServlet如何定位Controller
 
-### Controller方法如何被加载
+### RequestMappingHandlerMapping初始化（Controller方法是如何被加载？）
 
 
-### 处理器调用
+`org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping`，
+看名字它是一个处理@RequestMapping并转换成请求->Handler的mapping的类。
+首先，我们来看看该类初始化。
+
+由于该类实现了InitializingBean接口，所以在初始化时会调用`afterPropertiesSet`这个方法。
+~~~
+
+	@Override
+	public void afterPropertiesSet() {
+		initHandlerMethods();
+	}
+    
+    //初始化handlerMethods
+	protected void initHandlerMethods() {
+		for (String beanName : getCandidateBeanNames()) {
+			if (!beanName.startsWith(SCOPED_TARGET_NAME_PREFIX)) {
+				processCandidateBean(beanName);
+			}
+		}
+		//这是工厂方法，目前没作用
+		handlerMethodsInitialized(getHandlerMethods());
+	}
+	
+	//找到Controller和RequestMapping的标注，作为handler。     
+    @Override
+	protected boolean isHandler(Class<?> beanType) {
+		return (AnnotatedElementUtils.hasAnnotation(beanType, Controller.class) ||
+				AnnotatedElementUtils.hasAnnotation(beanType, RequestMapping.class));
+	}
+
+~~~
+
+processCandidateBean方法中调用的detectHandlerMethods里面有三步：
+* getMappingForMethod(method, Class)  创建RequestMappingInfo，供请求时匹配HandlerMethod
+* AopUtils.selectInvocableMethod  过滤能够调用的，排除private、static或Spring代理方法。
+* registerHandlerMethod(handler, invocableMethod, mapping)  用MappingRegistry创建HandlerMethod
+
+
+
+
+### RequestMapping方法寻找和调用过程
+
+我们来看核心方法AbstractHandlerMethodMapping.lookupHandlerMethod(String lookupPath, HttpServletRequest request)的分析。
+
+~~~
+
+	protected HandlerMethod lookupHandlerMethod(String lookupPath, HttpServletRequest request) throws Exception {
+		List<Match> matches = new ArrayList<>();
+		//和@RequestMapping定义的没有变量的那些路径，做直接匹配
+		List<T> directPathMatches = this.mappingRegistry.getMappingsByUrl(lookupPath);
+		if (directPathMatches != null) {
+		    //通过RequestMappingInfo.getMatchingCondition，生成能够匹配上的RequestMappingInfo
+		    //返回Match对象（匹配结果）
+			addMatchingMappings(directPathMatches, matches, request);
+		}
+		if (matches.isEmpty()) {
+			// 所有mapping都调用一遍，看是否能匹配上
+			addMatchingMappings(this.mappingRegistry.getMappings().keySet(), matches, request);
+		}
+
+		if (!matches.isEmpty()) {
+		    //按RequestMappingInfo.compareTo中定义的匹配逻辑去做比对，选出优先级最高的Match对象（RequestMapping）
+			Comparator<Match> comparator = new MatchComparator(getMappingComparator(request));
+			matches.sort(comparator);
+			Match bestMatch = matches.get(0);
+			if (matches.size() > 1) {
+				if (logger.isTraceEnabled()) {
+					logger.trace(matches.size() + " matching mappings: " + matches);
+				}
+				if (CorsUtils.isPreFlightRequest(request)) {
+					return PREFLIGHT_AMBIGUOUS_MATCH;
+				}
+				Match secondBestMatch = matches.get(1);
+				if (comparator.compare(bestMatch, secondBestMatch) == 0) {
+					Method m1 = bestMatch.handlerMethod.getMethod();
+					Method m2 = secondBestMatch.handlerMethod.getMethod();
+					String uri = request.getRequestURI();
+					throw new IllegalStateException(
+							"Ambiguous handler methods mapped for '" + uri + "': {" + m1 + ", " + m2 + "}");
+				}
+			}
+			request.setAttribute(BEST_MATCHING_HANDLER_ATTRIBUTE, bestMatch.handlerMethod);
+			//设置一些成功匹配（mapping）的匹配信息到request Attr中
+			handleMatch(bestMatch.mapping, lookupPath, request);
+			//返回HandlerMethod
+			return bestMatch.handlerMethod;
+		}
+		else {
+			return handleNoMatch(this.mappingRegistry.getMappings().keySet(), lookupPath, request);
+		}
+	}
+
+~~~
+
+以上就是HandlerMethod的匹配过程，最终在DispatcherServlet中，
+HandlerMethod会被包装到HandlerExecutionChain中。
+
+
+RequestMappingHandlerAdapter将会调用
+
+~~~
+			ServletInvocableHandlerMethod invocableMethod = createInvocableHandlerMethod(handlerMethod);
+			if (this.argumentResolvers != null) {
+				invocableMethod.setHandlerMethodArgumentResolvers(this.argumentResolvers);
+			}
+			if (this.returnValueHandlers != null) {
+				invocableMethod.setHandlerMethodReturnValueHandlers(this.returnValueHandlers);
+			}
+			invocableMethod.setDataBinderFactory(binderFactory);
+			invocableMethod.setParameterNameDiscoverer(this.parameterNameDiscoverer);
+
+~~~
+
+
 
 
 
