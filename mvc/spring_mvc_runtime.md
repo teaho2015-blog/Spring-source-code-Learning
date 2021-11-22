@@ -231,18 +231,71 @@ HandlerMethod会被包装到HandlerExecutionChain中。
 
 
 RequestMappingHandlerAdapter将会调用
+`public final ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception`
+
+我们来看看核心方法`invokeHandlerMethod`的调用handlerMethod过程。  
+重点留意：HandlerMethodArgumentResolver、HandlerMethodReturnValueHandler的调用。
 
 ~~~
+	protected ModelAndView invokeHandlerMethod(HttpServletRequest request,
+			HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
+        //1 封装一个Servlet请求的请求变量
+		ServletWebRequest webRequest = new ServletWebRequest(request, response);
+		try {
+		    //2 获取WebDataBinderFactory这一创建 WebDataBinder 的工厂
+			WebDataBinderFactory binderFactory = getDataBinderFactory(handlerMethod);
+			//3
+			ModelFactory modelFactory = getModelFactory(handlerMethod, binderFactory);
+            //4 ServletInvocableHandlerMethod拓展了InvocableHandlerMethod,并支持了HandlerMethodReturnValueHandler的处理，
+            // InvocableHandlerMethod支持了HandlerMethodArgumentResolver的处理
 			ServletInvocableHandlerMethod invocableMethod = createInvocableHandlerMethod(handlerMethod);
 			if (this.argumentResolvers != null) {
+                //5 设置HandlerMethodArgumentResolver集合
 				invocableMethod.setHandlerMethodArgumentResolvers(this.argumentResolvers);
 			}
 			if (this.returnValueHandlers != null) {
+				//6 设置HandlerMethodReturnValueHandler集合
 				invocableMethod.setHandlerMethodReturnValueHandlers(this.returnValueHandlers);
 			}
 			invocableMethod.setDataBinderFactory(binderFactory);
 			invocableMethod.setParameterNameDiscoverer(this.parameterNameDiscoverer);
 
+			ModelAndViewContainer mavContainer = new ModelAndViewContainer();
+			mavContainer.addAllAttributes(RequestContextUtils.getInputFlashMap(request));
+			modelFactory.initModel(webRequest, mavContainer, invocableMethod);
+			mavContainer.setIgnoreDefaultModelOnRedirect(this.ignoreDefaultModelOnRedirect);
+
+			AsyncWebRequest asyncWebRequest = WebAsyncUtils.createAsyncWebRequest(request, response);
+			asyncWebRequest.setTimeout(this.asyncRequestTimeout);
+
+			WebAsyncManager asyncManager = WebAsyncUtils.getAsyncManager(request);
+			asyncManager.setTaskExecutor(this.taskExecutor);
+			asyncManager.setAsyncWebRequest(asyncWebRequest);
+			asyncManager.registerCallableInterceptors(this.callableInterceptors);
+			asyncManager.registerDeferredResultInterceptors(this.deferredResultInterceptors);
+
+			if (asyncManager.hasConcurrentResult()) {
+				Object result = asyncManager.getConcurrentResult();
+				mavContainer = (ModelAndViewContainer) asyncManager.getConcurrentResultContext()[0];
+				asyncManager.clearConcurrentResult();
+				LogFormatUtils.traceDebug(logger, traceOn -> {
+					String formatted = LogFormatUtils.formatValue(result, !traceOn);
+					return "Resume with async result [" + formatted + "]";
+				});
+				invocableMethod = invocableMethod.wrapConcurrentResult(result);
+			}
+
+			invocableMethod.invokeAndHandle(webRequest, mavContainer);
+			if (asyncManager.isConcurrentHandlingStarted()) {
+				return null;
+			}
+
+			return getModelAndView(mavContainer, modelFactory, webRequest);
+		}
+		finally {
+			webRequest.requestCompleted();
+		}
+	}
 ~~~
 
 
