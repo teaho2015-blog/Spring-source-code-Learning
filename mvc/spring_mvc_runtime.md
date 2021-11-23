@@ -331,6 +331,26 @@ RequestMappingHandlerAdapter将会调用
 * @RequestAttribute 对应的是RequestAttributeMethodArgumentResolver解析器。
 * @RequestPart 注解对应的是RequestPartMethodArgumentResolver解析器。
 
+### 结果解析
+
+
+## 异常处理
+
+
+
+## 调用关系整理
+
+流程图
+
+
+
+## 拓展点例子
+
+
+
+# reference
+
+[1][Spring MVC中异常处理的类体系结构|赵鑫](https://www.cnblogs.com/xinzhao/p/4902295.html)  
 
 
 
