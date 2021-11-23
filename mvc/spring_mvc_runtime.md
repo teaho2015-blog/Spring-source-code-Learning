@@ -126,8 +126,7 @@ doService方法会设置一些框架对象，WebApplicationContext等到request�
 嗯，不急，接下来继续分析。
 
 
-
-## DispatcherServlet如何定位Controller
+## DispatcherServlet如何定位和处理Controller
 
 ### RequestMappingHandlerMapping初始化（Controller方法是如何被加载？）
 
@@ -172,7 +171,7 @@ processCandidateBean方法中调用的detectHandlerMethods里面有三步：
 
 
 
-### RequestMapping方法寻找和调用过程
+### RequestMapping方法寻找和controller调用过程
 
 我们来看核心方法AbstractHandlerMethodMapping.lookupHandlerMethod(String lookupPath, HttpServletRequest request)的分析。
 
@@ -259,7 +258,7 @@ RequestMappingHandlerAdapter将会调用
 			}
 			invocableMethod.setDataBinderFactory(binderFactory);
 			invocableMethod.setParameterNameDiscoverer(this.parameterNameDiscoverer);
-
+            //7 初始化ModelAndViewContainer并处理@SessionAttribute和@ModelAttribute的方法（现在前后分离的大环境下，一般很少用到）
 			ModelAndViewContainer mavContainer = new ModelAndViewContainer();
 			mavContainer.addAllAttributes(RequestContextUtils.getInputFlashMap(request));
 			modelFactory.initModel(webRequest, mavContainer, invocableMethod);
@@ -284,7 +283,7 @@ RequestMappingHandlerAdapter将会调用
 				});
 				invocableMethod = invocableMethod.wrapConcurrentResult(result);
 			}
-
+            // 8 invocableMethod处理请求并调用我们标注的对应的requestMapping方法
 			invocableMethod.invokeAndHandle(webRequest, mavContainer);
 			if (asyncManager.isConcurrentHandlingStarted()) {
 				return null;
@@ -297,6 +296,47 @@ RequestMappingHandlerAdapter将会调用
 		}
 	}
 ~~~
+
+接下来我们来看ServletInvocableHandlerMethod如何处理handlerMethod
+~~~
+	public void invokeAndHandle(ServletWebRequest webRequest, ModelAndViewContainer mavContainer,
+			Object... providedArgs) throws Exception {
+        
+        //8.1 转换请求参数并调用方法
+		Object returnValue = invokeForRequest(webRequest, mavContainer, providedArgs);
+		setResponseStatus(webRequest);
+		
+		//省略
+
+        //8.2 处理并转换返回结果
+        this.returnValueHandlers.handleReturnValue(
+                returnValue, getReturnValueType(returnValue), mavContainer, webRequest);
+                
+        //省略
+
+	}
+
+~~~
+
+上面的8.1方法调用中，转换参数会通过HandlerMethodArgumentResolverComposite集合调用HandlerMethodArgumentResolver的各个实现类的两个方法
+* `supportsParameter(MethodParameter)`  通过这个方法找到支持转换当前方法参数的HandlerMethodArgumentResolver
+* `resolveArgument(MethodParameter, @Nullable ModelAndViewContainer, NativeWebRequest, @Nullable WebDataBinderFactory binderFactory)` 进行请求参数->方法参数对象的转换。
+
+那么我这里列举下常见的不同方法参数的对应HandlerMethodArgumentResolver（handler方法参数解析器）：
+* @RequestParam 注解对应的是RequestParamMethodArgumentResolver解析器（作用不止于此）。
+* @PathVariable 注解对应的是PathVariableMapMethodArgumentResolver解析器。
+* @RequestBody 注解对应的是RequestResponseBodyMethodProcessor解析器。
+* 没有注解的model 对应使用ModelAttributeMethodProcessor解析器。
+* 带@RequestParam注解的Map 对应使用RequestParamMapMethodArgumentResolver解析器。
+* @RequestAttribute 对应的是RequestAttributeMethodArgumentResolver解析器。
+* @RequestPart 注解对应的是RequestPartMethodArgumentResolver解析器。
+
+
+
+
+
+
+
 
 
 
