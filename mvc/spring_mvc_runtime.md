@@ -372,7 +372,9 @@ this.returnValueHandlers.handleReturnValue(
 processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
 ~~~
 
+上面的方法里面的实现比较简单，就是按顺序调用DispatcherServlet的HandlerExceptionResolver集合的resolveException方法，如果有返回值就停止调用并返回。
 
+额外说说，ExceptionHandlerExceptionResolver的调用
 
 
 
