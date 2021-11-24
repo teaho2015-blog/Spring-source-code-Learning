@@ -333,8 +333,46 @@ RequestMappingHandlerAdapter将会调用
 
 ### 结果解析
 
+在上面分析ServletInvocableHandlerMethod的调用中，简单说到
+~~~
+8.2 处理并转换返回结果
+this.returnValueHandlers.handleReturnValue(
+    returnValue, getReturnValueType(returnValue), mavContainer, webRequest);
+
+~~~
+
+会通过HandlerMethodReturnValueHandlerComposite集合调用`HandlerMethodReturnValueHandler`的两个方法：
+* `supportsReturnType(MethodParameter returnType)` 通过这个方法找到能够处理当前调用返回值的HandlerMethodReturnValueHandler
+* `handleReturnValue(@Nullable Object returnValue, MethodParameter, ModelAndViewContainer, NativeWebRequest) throws Exception;`  处理对应returnValue。
+
+同样，我列举下常见的HandlerMethodArgumentResolver（返回值解析器）：
+* @ResponseBody 注解对应的是RequestResponseBodyMethodProcessor解析器。
+
+
 
 ## 异常处理
+
+
+### 初始化及作用
+
+无论是从DispatcherServlet.properties文件初始化还是通过@EnableWebMvc或者Spring Boot中自加载的WebMvcConfigurationSupport初始化DispatcherServlet
+策略对象，一般都会加载这三个默认的HandlerExceptionResolver子类：
+* ExceptionHandlerExceptionResolver 处理@ExceptionHandler注解
+* ResponseStatusExceptionResolver 处理controller抛出的带@ResponseStatus注解的Exception
+* DefaultHandlerExceptionResolver 处理SpringMVC的一些框架异常
+
+一般`ExceptionHandlerExceptionResolver`这一处理器足够我们使用，不过如果我们有定制需求，
+可以通过WebMvcConfigurer挂载自己拓展的HandlerExceptionResolver。
+
+### 调用点
+
+在本文开始，分析DispatcherServlet的处理请求中，我们分析到如下语句，做了简单介绍：
+~~~
+//8. 如果了发生异常，则执行handlerExceptionResolvers集合的resolveException，最后triggerAfterCompletion
+processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
+~~~
+
+
 
 
 
