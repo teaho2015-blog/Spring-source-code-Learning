@@ -374,9 +374,18 @@ processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchExc
 
 上面的方法里面的实现比较简单，就是按顺序调用DispatcherServlet的HandlerExceptionResolver集合的resolveException方法，如果有返回值就停止调用并返回。
 
-额外说说，ExceptionHandlerExceptionResolver的调用
+额外说说，ExceptionHandlerExceptionResolver的调用，
+1. 调用shouldApplyTo方法看当前ExceptionResolver能否处理当前Handler
+2. 调用doResolveHandlerMethodException处理ExceptionHandler
+   * 创建ServletInvocableHandlerMethod
+        * 寻找当前Handler的@ExceptionHandler方法，不存在的话，寻找@ControllerAdvice（ControllerAdviceBean）
+        * 最终都是通过ExceptionHandlerMethodResolver去找到对应的调用方法
+        * 把对应方法包装到ServletInvocableHandlerMethod供调用
+   * 设置对应的HandlerMethodArgumentResolver和HandlerMethodReturnValueHandler供异常处理方法的入参和出参处理
+   * 执行调用
 
 
+核心方法`ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod, Exception)`。
 
 ## 调用关系整理
 
