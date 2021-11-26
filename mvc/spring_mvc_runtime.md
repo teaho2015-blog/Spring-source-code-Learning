@@ -387,6 +387,11 @@ processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchExc
 
 核心方法`ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod, Exception)`。
 
+
+## 拓展：Servlet的异常处理
+
+
+
 ## 调用关系整理
 
 流程图
