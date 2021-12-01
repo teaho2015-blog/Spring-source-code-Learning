@@ -388,8 +388,48 @@ processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchExc
 核心方法`ServletInvocableHandlerMethod getExceptionHandlerMethod(HandlerMethod, Exception)`。
 
 
-## 拓展：Servlet的异常处理
+### 拓展：Servlet容器的异常处理
 
+Servlet容器（Tomcat、Jetty等）有一个Error page的概念。Error page能够将返回错误状态码的请求重定向到我们定义的error page。
+
+这里使用Tomcat做举例：  
+1. 在web.xml中可以这样定义error page：  
+```
+    <!--errorpage handler -->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/jsp/errors/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/WEB-INF/jsp/errors/error.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>400</error-code>
+        <location>/WEB-INF/jsp/errors/error.jsp</location>
+    </error-page>
+```
+2. 在embed Tomcat中使用`org.apache.catalina.Context`的`void addErrorPage(ErrorPage errorPage);`方法添加error page。
+
+
+#### Spring Boot默认定义的Error Page
+
+在Spring Boot中，Spring Boot为我们默认定义了一个全局错误处理error page(路径是/error)，它在不同content-type下会返回HTML或者JSON信息。
+
+核心配置类`org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration`。
+~~~
+    //错误controller
+	public BasicErrorController basicErrorController(ErrorAttributes errorAttributes) {
+		return new BasicErrorController(errorAttributes, this.serverProperties.getError(),
+				this.errorViewResolvers);
+	}
+	//错误页注册器
+	public ErrorPageCustomizer errorPageCustomizer() {
+		return new ErrorPageCustomizer(this.serverProperties, this.dispatcherServletPath);
+	}
+	
+
+~~~
 
 
 ## 调用关系整理
