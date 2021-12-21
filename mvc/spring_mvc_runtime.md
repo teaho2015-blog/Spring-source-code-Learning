@@ -434,7 +434,9 @@ Servlet容器（Tomcat、Jetty等）有一个Error page的概念。Error page能
 
 ## 调用关系整理
 
-流程图
+最终，整理了一下组件的调用关系图。
+
+![springmvc_dispatcherservlet_process_sequence.jpg](springmvc_dispatcherservlet_process_sequence.jpg)
 
 
 
