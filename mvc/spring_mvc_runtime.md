@@ -348,6 +348,10 @@ this.returnValueHandlers.handleReturnValue(
 同样，我列举下常见的HandlerMethodArgumentResolver（返回值解析器）：
 * @ResponseBody 注解对应的是RequestResponseBodyMethodProcessor解析器。
 
+同时，阅读源码时，注意这几个类：
+* RequestResponseBodyMethodProcessor
+* RequestResponseBodyAdviceChain
+* HttpMessageConverter
 
 
 ## 异常处理
