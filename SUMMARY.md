@@ -21,6 +21,7 @@
     * [Spring Cloud的断路器--Spring Cloud Commons定义、Netflix Hystrix实现分析](cloud/spring-cloud-circuitbreak.md)
 * Spring Cloud Context
     * [NamedContextFactory](cloud/spring-cloud-NamedContextFactory.md)
+    * [Spring Cloud配置中心--Spring Cloud Context、Spring Cloud Zookeeper Config的实现分析](cloud/config/spring-cloud-config.md)
 
 
 ## PART Ⅲ Spring核心实现
