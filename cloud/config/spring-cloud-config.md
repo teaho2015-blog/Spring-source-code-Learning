@@ -5,7 +5,6 @@
 Spring Cloud项目（或Spring Cloud中间件）无一例外都引入了Spring Cloud Context和Spring Cloud Commons模块。他们定义了Spring Cloud项目的约定用法和通用组件。
 
 
-![spring_cloud_config_procession.jpg](spring_cloud_config_procession.jpg)
 
 * PropertySourceBootstrapConfiguration
 * PropertySourceLocator
@@ -16,7 +15,10 @@ Spring Cloud项目（或Spring Cloud中间件）无一例外都引入了Spring C
 * @RefreshScope
 
 
-## 
+## Spring Cloud Zookeeper Config
+
+![spring-cloud-config-zk-refresh.jpg](spring-cloud-config-zk-refresh.jpg)
+
 
 
 
