@@ -20,9 +20,6 @@ Spring Cloud项目（或Spring Cloud中间件）无一例外都引入了Spring C
 ![spring-cloud-config-zk-refresh.jpg](spring-cloud-config-zk-refresh.jpg)
 
 
-
-
-
 ## Reference
 
 [1][源码分析一下spring的scoped-proxy（一）](https://juejin.cn/post/6869402006017507335)  
