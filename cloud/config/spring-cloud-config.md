@@ -1,11 +1,14 @@
-# Spring Cloud配置中心--Spring Cloud Context、Spring Cloud Zookeeper Config的实现分析
+# Spring Cloud远程配置中心--Spring Cloud Context、Spring Cloud Zookeeper Config的实现分析
 
 ## 简介
 
-Spring Cloud项目（或Spring Cloud中间件）无一例外都引入了Spring Cloud Context和Spring Cloud Commons模块。他们定义了Spring Cloud项目的约定用法和通用组件。
+Spring Cloud Context是Spring Cloud应用上下文的实现。
 
+谈到Spring Cloud应用如何加载和刷新远程配置，就绕不开分析Spring Cloud Context（上下文）的启动和刷新，
+而分析Spring Cloud Context的源码，又会有大量的篇幅是分析源码中大量加载配置，处理environment的部分。
+所以我将Spring Cloud应用上下文的启动合并到这里分析。
 
-
+Spring Cloud Context的一些组件，在这里先简单说说他们的作用：
 * PropertySourceBootstrapConfiguration
 * PropertySourceLocator
 * RefreshEventListener
@@ -13,6 +16,13 @@ Spring Cloud项目（或Spring Cloud中间件）无一例外都引入了Spring C
 * RefreshEvent
 * RefreshScope
 * @RefreshScope
+* BootstrapApplicationListener
+
+## Spring Cloud Context启动
+
+
+
+
 
 
 ## Spring Cloud Zookeeper Config
