@@ -58,15 +58,18 @@ Spring Cloud Context初始化是跟随Spring Boot启动，首先会初始化类`
 		//4. 将加载的应用上下文作为父上下文
 			context = bootstrapServiceContext(environment, event.getSpringApplication(),
 					configName);
-            //1. 加上CloseContextOnFailureApplicationListener，通过监听器在Context关闭时，关闭父context
+            //加上CloseContextOnFailureApplicationListener，通过监听器在Context关闭时，关闭父context
 			event.getSpringApplication().addListeners(new CloseContextOnFailureApplicationListener(context));
 		}
-
+        // 将cloud context的ApplicationContextInitializer加到子应用中
+        // 添加配置解密初始化器
 		apply(context, event.getSpringApplication(), environment);
 	}
  
 ~~~
 
+
+### 加载远程配置的加载器--PropertySourceLocator和PropertySourceBootstrapConfiguration
 
 
 
