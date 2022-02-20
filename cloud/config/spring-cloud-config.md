@@ -72,7 +72,7 @@ Spring Cloud Context初始化是跟随Spring Boot启动，首先会初始化类`
 ### 加载远程配置的加载器--PropertySourceLocator和PropertySourceBootstrapConfiguration
 
 PropertySourceLocator是Spring Cloud Context加载或拉取配置的一个配置加载器。
-在应用启动和刷新时，PropertySourceBootstrapConfiguration通过调用`PropertySourceLocator`去加载配置到environment。  
+在应用启动和刷新时，`PropertySourceBootstrapConfiguration`通过调用`PropertySourceLocator`去加载配置到environment。  
 下面，我们来看看重点方法的分析：
 ~~~
 	@Override
@@ -121,7 +121,9 @@ PropertySourceLocator是Spring Cloud Context加载或拉取配置的一个配置
 
 下面通过启动流程图和刷新流程图来做一个总结。
 
-###
+### Spring Cloud Context启动流程
+
+![spring-cloud-context-initialization.jpg](spring-cloud-context-initialization.jpg)
 
 ### 配置刷新流程--以Spring Cloud Zookeeper Config为例
 
