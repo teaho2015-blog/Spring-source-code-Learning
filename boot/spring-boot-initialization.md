@@ -152,7 +152,7 @@ private void prepareContext(ConfigurableApplicationContext context,
    //对application做一些处理，设置一些组件，
    //比如BeanNameGenerator，ApplicationConversionService（包含一些默认的Converter和formatter）
    postProcessApplicationContext(context);
-   //
+   // 加载并运行ApplicationContextInitializer
    applyInitializers(context);
    listeners.contextPrepared(context);
    if (this.logStartupInfo) {
@@ -244,11 +244,12 @@ public void refresh() throws BeansException, IllegalStateException {
       try {
          // Allows post-processing of the bean factory in context subclasses.
          postProcessBeanFactory(beanFactory);
-         // Invoke factory processors registered as beans in the context.
+         // Invoke factory processors registered as beans in the context. 执行beanfactoryPostProcessor
          invokeBeanFactoryPostProcessors(beanFactory);
-         // Register bean processors that intercept bean creation.
+         // Register bean processors that intercept bean creation. 
+         // 注册beanPostProcessor
          registerBeanPostProcessors(beanFactory);
-         // Initialize message source for this context.
+         // Initialize message source for this context. 初始化messageSource
          initMessageSource();
          // Initialize event multicaster for this context.
          initApplicationEventMulticaster();
@@ -463,7 +464,7 @@ btw，如果是tomcat server的话，spring boot会启动多一个线程防止�
 
 最后，按照启动阶段整理一幅全景图。
 
-
+![spring-boot-startup.jpg](spring-boot-startup.jpg)
 
 
 ## 例子
