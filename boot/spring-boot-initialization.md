@@ -60,7 +60,7 @@ this.mainApplicationClass = deduceMainApplicationClass();
 2. 初始化ApplicationContextInitializer和ApplicationListener。
 3. 找出启动类。
 
-## run()
+## run()源码解析
 
 介绍`run()`方法前，先说说贯穿run方法的ApplicationRunListener，它有助于理解整个run()的运行周期。  
 写在这里：[Spring Application事件机制](event-mechanism.md)
@@ -142,8 +142,7 @@ private ConfigurableEnvironment prepareEnvironment(
 }
 ~~~
 
-### refreshContext
-
+### prepareContext
 ~~~
 private void prepareContext(ConfigurableApplicationContext context,
       ConfigurableEnvironment environment, SpringApplicationRunListeners listeners,
@@ -183,7 +182,30 @@ private void prepareContext(ConfigurableApplicationContext context,
 
 ~~~
 
-### 容器refresh
+### 容器refresh（refreshContext）
+
+
+~~~
+	private void refreshContext(ConfigurableApplicationContext context) {
+		refresh(context);
+		if (this.registerShutdownHook) {
+			try {
+				context.registerShutdownHook();
+			}
+			catch (AccessControlException ex) {
+				// Not allowed in some environments.
+			}
+		}
+	}
+	
+
+~~~
+
+refreshContext会做两件事，
+1. 应用上下文刷新
+2. 注册shutdown钩子
+
+我们来看看ServletWebServer的刷新。
 
 ~~~
 // ServletWebServerApplicationContext 
@@ -427,7 +449,6 @@ btw，如果是tomcat server的话，spring boot会启动多一个线程防止�
 
 #### resetCommonCaches()
 
-
 ~~~
 
                 // Reset common introspection caches in Spring's core, since we
@@ -436,6 +457,12 @@ btw，如果是tomcat server的话，spring boot会启动多一个线程防止�
 
 ~~~
 最后会在finally执行resetCommonCaches()，清除一些Spring core、beans加载和解析的Bean信息缓存（因为对于singleton bean来说已经不需要了）。
+
+
+## 流程整理
+
+最后，按照启动阶段整理一幅全景图。
+
 
 
 
