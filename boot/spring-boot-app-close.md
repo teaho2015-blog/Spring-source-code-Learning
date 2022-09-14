@@ -119,6 +119,26 @@ JMX方式关闭：
 	}
 ~~~
 
+#### pidFile生成
+
+spring boot提供ApplicationPidFileWriter类，将运行时pid写入指定文件中。  
+**应用场景**：可供kill使用。` kill $(cat application.pid)`
+
+添加步骤：
+1. 增加监听器
+~~~
+org.springframework.context.ApplicationListener=\
+org.springframework.boot.context.ApplicationPidFileWriter
+~~~
+2. 配置项
+~~~
+spring:
+  pid:
+    fail-on-write-error: true
+    #可通过此文件里的pid去关闭应用
+    file: ./application.pid
+~~~
+
 ## spring容器close代码分析
 
 这里对容器关闭进行一些分析，以注释的形式写在下面。
@@ -208,16 +228,14 @@ JMX方式关闭：
 
 ## 整体流程
 
+列出关闭流程：
 
-
-
+![spring-boot-shutdown.jpg](spring-boot-shutdown.jpg)
 
 ## 示例
 
 请参考https://github.com/teaho2015-blog/spring-source-code-learning-demo 的spring boot mvc shutdown模块，
 我分别将上述关闭方式和拓展点（事件，LifeCycleProcessor等）写了demo。
-
-
 
 ### 容器关闭拓展点
 
