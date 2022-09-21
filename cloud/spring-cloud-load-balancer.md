@@ -1118,6 +1118,22 @@ ${服务名}:
     ServerListRefreshInterval: 5000
 ~~~
 
+
+### 整体流程
+
+如下整理了一张默认组件流程。
+
+从源码上看，
+Spring Cloud Eureka、Nacos都支持如下的一个默认实现模型。  
+Spring Cloud Zookeeper除了沿用默认模型，
+Cloud Zookeeper Dependencies则自实现了一套ping、Rule。
+
+
+
+![ribbon-process.jpg](ribbon-process.jpg)
+
+
+
 <!-- 不合理之处 -->
 
 <!--
