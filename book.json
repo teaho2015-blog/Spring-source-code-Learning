@@ -6,7 +6,9 @@
     "ga",
     "anchors",
     "plantuml",
-    "page-treeview"
+    "back-to-top-button",
+    "page-toc-button",
+    "-lunr", "-search", "search-plus"
   ],
   "pluginsConfig": {
     "disqus": {
