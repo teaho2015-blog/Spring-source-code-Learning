@@ -8,6 +8,7 @@
     "plantuml",
     "back-to-top-button",
     "page-toc-button",
+    "git-author",
     "-lunr", "-search", "search-plus"
   ],
   "pluginsConfig": {
@@ -27,6 +28,12 @@
       "minHeaderCount": "4",
       "minHeaderDeep": "10"
 
+    },
+    "git-author":{
+      "position": "bottom",
+      "createTpl": "Created by {user} {timeStamp}",
+      "modifyTpl": "",
+      "timeStampFormat": "YYYY-MM-DD HH:mm:ss"
     }
   }
 }
