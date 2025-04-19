@@ -1,7 +1,6 @@
 {
   "title": "Spring Learning|teaho.net",
   "plugins": ["disqus",
-    "mermaid",
     "include-codeblock",
     "ga",
     "anchors",
